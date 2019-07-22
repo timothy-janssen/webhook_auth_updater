@@ -131,6 +131,8 @@ app.post('/', function (req, res) {
 	}
     
     add_auth_to_bot()
+
+    res.end('Added ${template_name} to webhooks to ${user_id}\'s bot ${bot_id} and version ${version_id}')
 })
 
 app.get('/', function (req, res) {

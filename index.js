@@ -147,7 +147,7 @@ app.get('/', function (req, res) {
         <body>
             <form action="/add_auth" method="post">
             	Bot Data<br>
-                Bot Pwner ID: <input type="text" name="user_id" /><br>
+                Bot Owner ID: <input type="text" name="user_id" /><br>
                 Bot ID: <input type="text" name="bot_id" /><br>
                 Version ID: <input type="text" name="version_id" /><br>
                 Developer Token: <input type="text" name="dev_token" /><br>

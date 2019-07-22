@@ -106,8 +106,6 @@ function start() {
 	})	
 }			
 
-//var app = express();
-
 var user_id
 var bot_id
 var version_id
@@ -115,7 +113,6 @@ var dev_token
 var template_name
 var username
 var password
-
 
 const server = http.createServer((req, res) => {
     if (req.method === 'POST') {
@@ -139,13 +136,13 @@ const server = http.createServer((req, res) => {
             <html>
             <body>
                 <form action="/" method="post">
-                    <input type="text" name="user_id" /><br />
-                    <input type="text" name="bot_id" /><br />
-                    <input type="text" name="version_id" /><br />
-                    <input type="text" name="dev_token" /><br />
-                    <input type="text" name="template_name" /><br />
-                    <input type="text" name="username" /><br />
-                    <input type="text" name="password" /><br />
+                    user_id: <input type="text" name="user_id" /><br>
+                    bot_id: <input type="text" name="bot_id" /><br>
+                    version_id: <input type="text" name="version_id" /><br>
+                    dev_token: <input type="text" name="dev_token" /><br>
+                    template_name: <input type="text" name="template_name" /><br>
+                    username: <input type="text" name="username" /><br>
+                    password: <input type="text" name="password" /><br>
                     <button>Add Auth data</button>
                 </form>
             </body>
@@ -171,20 +168,3 @@ function collectRequestData(request, callback) {
         callback(null);
     }
 }
-
-
-//app.post('/start', function (req, res) {
-//	console.log('debug')
-//
-//	user_id = req.body.user_id
-//	bot_id = req.body.bot_id
-//	version_id = req.body.version_id
-//	dev_token = req.body.dev_token
-//	template_name = req.body.template_name
-//	username = req.body.username
-//	password = req.body.password
-//
-//	start()
-//});
-//
-//app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`)); 

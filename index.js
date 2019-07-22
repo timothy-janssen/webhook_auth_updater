@@ -1,12 +1,43 @@
 var request = require('request-promise');
 var config  = require('./config');
+var express = require('express');
+
+var app = express();
+
+var user_id
+var bot_id
+var version_id
+var dev_token
+var template_name
+var username
+var password
+
+// returns a random boolean - not for twm demo
+app.post('/start', function (req, res) {
+	console.log(req)
+	
+	user_id = req.user_id
+	bot_id = req.bot_id
+	version_id = req.version_id
+	dev_token = req.dev_token
+	template_name = req.template_name
+	username = req.username
+	password = req.password
+
+	start()
+});
+
+
+app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`)); 
+
+
 
 function wait(milleseconds) {
   return new Promise(resolve => setTimeout(resolve, milleseconds))
 }
 
-base_url = "https://api.cai.tools.sap/build/v1/users/" + config.USER_ID + "/bots/" + config.BOT_ID + "/versions/" + config.VERSION_ID + "/builder"
-auth_credentials = "Token " + config.DEV_TOKEN
+base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
+auth_credentials = "Token " + dev_token
 header = {
    	"Authorization": auth_credentials,
    	"Accept": "application/json",
@@ -43,7 +74,7 @@ async function add_template_to_webhooks() {
 						url: base_url + "/conditions/" + condition_id + "/actions/" + action_id + "/webhooks/" + webhook_id,
 						method:  "PUT",
 					   	headers: header,
-					   	body: '{ "auth": { "mode": "template", "template_name": "' + config.TEMPLATE_NAME + '", "type": "basic", "id": "' + auth_template_id + '"}}'
+					   	body: '{ "auth": { "mode": "template", "template_name": "' + template_name + '", "type": "basic", "id": "' + auth_template_id + '"}}'
 					}
 
 					await wait(500)
@@ -66,7 +97,7 @@ var get_templates = {
    	headers: header
 }
 
-var post_wh_auth_template_body = '{"parameters" : {"username": "' + config.USERNAME + '", "password": "' + config.PASSWORD + '"}, "type": "basic", "template_name": "' + config.TEMPLATE_NAME + '"}'
+var post_wh_auth_template_body = '{"parameters" : {"username": "' + username + '", "password": "' + password + '"}, "type": "basic", "template_name": "' + template_name + '"}'
 
 var post_wh_auth_template = {
 	url:    base_url + "/webhook_templates/auth_credentials",
@@ -75,13 +106,13 @@ var post_wh_auth_template = {
    	body: post_wh_auth_template_body 
 }
 
-function create_auth_template() {
+function start() {
 	request.get(get_templates)
 	.then( function(data) {
 		webhook_data = JSON.parse(data)
 
 		webhook_data.results.auth.forEach( function(auth_template_data) {
-			if ( auth_template_data.template_name == config.TEMPLATE_NAME ) {
+			if ( auth_template_data.template_name == template_name ) {
 				console.log('Template already created')
 				auth_template_id = auth_template_data.id
 				add_template_to_webhooks()
@@ -103,7 +134,7 @@ function create_auth_template() {
 	})	
 }
 
-create_auth_template()
+
 
 
 		

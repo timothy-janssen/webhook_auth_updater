@@ -111,7 +111,7 @@ function add_auth_to_bot() {
 	})	
 }
 
-app.post('/', function (req, res) {
+app.post('/add_auth', function (req, res) {
 	user_id = req.body.user_id
 	bot_id = req.body.bot_id
 	version_id = req.body.version_id
@@ -135,7 +135,7 @@ app.post('/', function (req, res) {
     res.end(`Added ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}`)
 })
 
-app.get('/', function (req, res) {
+app.get('/add_auth', function (req, res) {
     res.end(`
         <!doctype html>
         <html>

@@ -135,6 +135,7 @@ app.post('/add_auth', function (req, res) {
     	res.end(`Added ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}`)
     })
     .catch ( function (err) {
+    	console.log(err)
     	res.end(`There was an error with your request`)
     })
 })

@@ -2,36 +2,6 @@ var request = require('request-promise');
 var config  = require('./config');
 var express = require('express');
 
-var app = express();
-
-var user_id
-var bot_id
-var version_id
-var dev_token
-var template_name
-var username
-var password
-
-// returns a random boolean - not for twm demo
-app.post('/start', function (req, res) {
-	console.log(req)
-	
-	user_id = req.user_id
-	bot_id = req.bot_id
-	version_id = req.version_id
-	dev_token = req.dev_token
-	template_name = req.template_name
-	username = req.username
-	password = req.password
-
-	start()
-});
-
-
-app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`)); 
-
-
-
 function wait(milleseconds) {
   return new Promise(resolve => setTimeout(resolve, milleseconds))
 }
@@ -132,12 +102,30 @@ function start() {
 			})
 		} 
 	})	
-}
+}			
 
+var app = express();
 
+var user_id
+var bot_id
+var version_id
+var dev_token
+var template_name
+var username
+var password
 
+app.post('/start', function (req, res) {
+	console.log(req)
 
-		
-		
+	user_id = req.user_id
+	bot_id = req.bot_id
+	version_id = req.version_id
+	dev_token = req.dev_token
+	template_name = req.template_name
+	username = req.username
+	password = req.password
 
-			
+	start()
+});
+
+app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`)); 

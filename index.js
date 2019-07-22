@@ -117,13 +117,13 @@ var password
 app.post('/start', function (req, res) {
 	console.log(req)
 
-	user_id = req.user_id
-	bot_id = req.bot_id
-	version_id = req.version_id
-	dev_token = req.dev_token
-	template_name = req.template_name
-	username = req.username
-	password = req.password
+	user_id = req.body.user_id
+	bot_id = req.body.bot_id
+	version_id = req.body.version_id
+	dev_token = req.body.dev_token
+	template_name = req.body.template_name
+	username = req.body.username
+	password = req.body.password
 
 	start()
 });

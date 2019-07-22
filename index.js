@@ -111,49 +111,48 @@ function start() {
 	})	
 }
 
-const server = app.createServer((req, res) => {
-    if (req.method === 'POST') {
+app.post('/', function (req, res) {
+	user_id = req.body.user_id
+	bot_id = req.body.bot_id
+	version_id = req.body.version_id
+	dev_token = req.body.dev_token
+	template_name = req.body.template_name
+	username = req.body.username
+	password = req.body.password
 
-        user_id = req.body.user_id
-		bot_id = req.body.bot_id
-		version_id = req.body.version_id
-		dev_token = req.body.dev_token
-		template_name = req.body.template_name
-		username = req.body.username
-		password = req.body.password
+	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
 
-		base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
+	header = {
+	   	"Authorization": "Token " + dev_token,
+	   	"Accept": "application/json",
+		"Cache-Control": "no-cache",
+		"Connection": "keep-alive",
+		"Content-Type": "application/json"
+	}
+    
+    start()
+})
 
-		auth_credentials = "Token " + dev_token
-		header = {
-		   	"Authorization": auth_credentials,
-		   	"Accept": "application/json",
-			"Cache-Control": "no-cache",
-			"Connection": "keep-alive",
-			"Content-Type": "application/json"
-		}
-
-        start()
-    } 
-    else {
-        res.end(`
-            <!doctype html>
-            <html>
-            <body>
-                <form action="/" method="post">
-                    user_id: <input type="text" name="user_id" /><br>
-                    bot_id: <input type="text" name="bot_id" /><br>
-                    version_id: <input type="text" name="version_id" /><br>
-                    dev_token: <input type="text" name="dev_token" /><br>
-                    template_name: <input type="text" name="template_name" /><br>
-                    username: <input type="text" name="username" /><br>
-                    password: <input type="text" name="password" /><br>
-                    <button>Add Auth data</button>
-                </form>
-            </body>
-            </html>
-        `);
-    }
+app.get('/', function (req, res) {
+    res.end(`
+        <!doctype html>
+        <html>
+        <body>
+            <form action="/" method="post">
+            	Bot Data<br>
+                user_id: <input type="text" name="user_id" /><br>
+                bot_id: <input type="text" name="bot_id" /><br>
+                version_id: <input type="text" name="version_id" /><br>
+                dev_token: <input type="text" name="dev_token" /><br>
+                <br>Authentication Template Data<br>
+                template_name: <input type="text" name="template_name" /><br>
+                username: <input type="text" name="username" /><br>
+                password: <input type="text" name="password" /><br>
+                <button>Add Auth data</button>
+            </form>
+        </body>
+        </html>
+    `);
 });
 
 app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`));

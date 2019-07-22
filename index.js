@@ -115,7 +115,8 @@ var username
 var password
 
 app.post('/start', function (req, res) {
-
+	console.log('debug')
+	
 	user_id = req.body.user_id
 	bot_id = req.body.bot_id
 	version_id = req.body.version_id

@@ -135,12 +135,12 @@ app.post('/add_auth', function (req, res) {
     res.end(`Added ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}`)
 })
 
-app.get('/add_auth', function (req, res) {
+app.get('/', function (req, res) {
     res.end(`
         <!doctype html>
         <html>
         <body>
-            <form action="/" method="post">
+            <form action="/add_auth" method="post">
             	Bot Data<br>
                 user_id: <input type="text" name="user_id" /><br>
                 bot_id: <input type="text" name="bot_id" /><br>

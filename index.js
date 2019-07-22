@@ -1,8 +1,7 @@
 const request = require('request-promise');
 const config  = require('./config');
-const http = require('http');
-const parse = require('querystring');
-//const express = require('express');
+const express = require('express');
+const bodyParser = require('body-parser')
 
 function wait(milleseconds) {
   return new Promise(resolve => setTimeout(resolve, milleseconds))
@@ -114,21 +113,18 @@ var template_name
 var username
 var password
 
-const server = http.createServer((req, res) => {
+const server = app.createServer((req, res) => {
     if (req.method === 'POST') {
-        collectRequestData(req, result => {
-            console.log(result);
 
-            user_id = result.user_id
-			bot_id = result.bot_id
-			version_id = result.version_id
-			dev_token = result.dev_token
-			template_name = result.template_name
-			username = result.username
-			password = result.password
+        user_id = req.body.user_id
+		bot_id = req.body.bot_id
+		version_id = req.body.version_id
+		dev_token = req.body.dev_token
+		template_name = req.body.template_name
+		username = req.body.username
+		password = req.body.password
 
-            start()
-        });
+        start()
     } 
     else {
         res.end(`
@@ -151,20 +147,8 @@ const server = http.createServer((req, res) => {
     }
 });
 
-server.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`));
+var app = express();
+app.use(bodyParser.json());  
+app.use(bodyParser.urlencoded());
 
-function collectRequestData(request, callback) {
-    const FORM_URLENCODED = 'application/x-www-form-urlencoded';
-    if(request.headers['content-type'] === FORM_URLENCODED) {
-        let body = '';
-        request.on('data', chunk => {
-            body += chunk.toString();
-        });
-        request.on('end', () => {
-            callback(parse(body));
-        });
-    }
-    else {
-        callback(null);
-    }
-}
+app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`));

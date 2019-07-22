@@ -74,7 +74,7 @@ function add_auth_to_bot() {
 	   	headers: header
 	}
 
-	request.get(get_templates)
+	return request.get(get_templates)
 	.then( function(data) {
 		webhook_data = JSON.parse(data)
 
@@ -131,8 +131,12 @@ app.post('/add_auth', function (req, res) {
 	}
     
     add_auth_to_bot()
-
-    res.end(`Added ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}`)
+    .then( function() {
+    	res.end(`Added ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}`)
+    })
+    .catch ( function (err) {
+    	res.end(`There was an error with your request`)
+    })
 })
 
 app.get('/', function (req, res) {

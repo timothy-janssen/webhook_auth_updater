@@ -3,28 +3,11 @@ const config  = require('./config');
 const express = require('express');
 const bodyParser = require('body-parser')
 
-function wait(milleseconds) {
-  return new Promise(resolve => setTimeout(resolve, milleseconds))
-}
+var app = express();
+app.use(bodyParser.json());  
+app.use(bodyParser.urlencoded());
 
-base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
-auth_credentials = "Token " + dev_token
-header = {
-   	"Authorization": auth_credentials,
-   	"Accept": "application/json",
-	"Cache-Control": "no-cache",
-	"Connection": "keep-alive",
-	"Content-Type": "application/json"
-}
-
-var get_conditions = {
-	url:    base_url + "/conditions",
-   	method:  "GET",
-   	headers: header
-}
-
-var condition_data
-var auth_template_data
+var auth_template_id
 
 var user_id
 var bot_id
@@ -34,7 +17,22 @@ var template_name
 var username
 var password
 
+function wait(milleseconds) {
+  return new Promise(resolve => setTimeout(resolve, milleseconds))
+}
+
+var base_url
+var auth_credentials
+var header
+
 async function add_template_to_webhooks() {
+
+	get_conditions = {
+		url:    base_url + "/conditions",
+	   	method:  "GET",
+	   	headers: header
+	}
+
 	request.get(get_conditions)
 	.then( async function(data) {
 		condition_data = JSON.parse(data)
@@ -124,6 +122,17 @@ const server = app.createServer((req, res) => {
 		username = req.body.username
 		password = req.body.password
 
+		base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
+
+		auth_credentials = "Token " + dev_token
+		header = {
+		   	"Authorization": auth_credentials,
+		   	"Accept": "application/json",
+			"Cache-Control": "no-cache",
+			"Connection": "keep-alive",
+			"Content-Type": "application/json"
+		}
+
         start()
     } 
     else {
@@ -146,9 +155,5 @@ const server = app.createServer((req, res) => {
         `);
     }
 });
-
-var app = express();
-app.use(bodyParser.json());  
-app.use(bodyParser.urlencoded());
 
 app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`));

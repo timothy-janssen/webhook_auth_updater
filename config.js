@@ -1,10 +1,11 @@
 module.exports = {
    PORT: process.env.PORT,
-   USER_ID: 'successfactors-sap',
-   BOT_ID: 'digital-assistant-shahvir-beta-cpi',
-   VERSION_ID: 'v2-beta-cpi-url',
-   DEV_TOKEN: '10218d4293d8868706c0455821297b7b',
-   TEMPLATE_NAME: 'CPI Auth',
-   USERNAME: "P2001096828",
-   PASSWORD: "Welcome1!",
+   user_id: 'successfactors-sap',
+   bot_id: 'digital-assistant-shahvir-beta-cpi',
+   version_id: 'v2-beta-cpi-url',
+   dev_token: '10218d4293d8868706c0455821297b7b',
+   template_name: 'CPI Auth',
+   username: "P2001096828",
+   password: "Welcome1!",
 };
+

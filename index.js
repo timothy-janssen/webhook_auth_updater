@@ -1,6 +1,8 @@
-var request = require('request-promise');
-var config  = require('./config');
-var express = require('express');
+const request = require('request-promise');
+const config  = require('./config');
+const http = require('http');
+const parse = require('querystring');
+//const express = require('express');
 
 function wait(milleseconds) {
   return new Promise(resolve => setTimeout(resolve, milleseconds))
@@ -104,7 +106,7 @@ function start() {
 	})	
 }			
 
-var app = express();
+//var app = express();
 
 var user_id
 var bot_id
@@ -114,18 +116,75 @@ var template_name
 var username
 var password
 
-app.post('/start', function (req, res) {
-	console.log('debug')
-	
-	user_id = req.body.user_id
-	bot_id = req.body.bot_id
-	version_id = req.body.version_id
-	dev_token = req.body.dev_token
-	template_name = req.body.template_name
-	username = req.body.username
-	password = req.body.password
 
-	start()
+const server = http.createServer((req, res) => {
+    if (req.method === 'POST') {
+        collectRequestData(req, result => {
+            console.log(result);
+
+            user_id = result.user_id
+			bot_id = result.bot_id
+			version_id = result.version_id
+			dev_token = result.dev_token
+			template_name = result.template_name
+			username = result.username
+			password = result.password
+
+            start()
+        });
+    } 
+    else {
+        res.end(`
+            <!doctype html>
+            <html>
+            <body>
+                <form action="/" method="post">
+                    <input type="text" name="user_id" /><br />
+                    <input type="text" name="bot_id" /><br />
+                    <input type="text" name="version_id" /><br />
+                    <input type="text" name="dev_token" /><br />
+                    <input type="text" name="template_name" /><br />
+                    <input type="text" name="username" /><br />
+                    <input type="text" name="password" /><br />
+                    <button>Add Auth data</button>
+                </form>
+            </body>
+            </html>
+        `);
+    }
 });
 
-app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`)); 
+server.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`));
+
+function collectRequestData(request, callback) {
+    const FORM_URLENCODED = 'application/x-www-form-urlencoded';
+    if(request.headers['content-type'] === FORM_URLENCODED) {
+        let body = '';
+        request.on('data', chunk => {
+            body += chunk.toString();
+        });
+        request.on('end', () => {
+            callback(parse(body));
+        });
+    }
+    else {
+        callback(null);
+    }
+}
+
+
+//app.post('/start', function (req, res) {
+//	console.log('debug')
+//
+//	user_id = req.body.user_id
+//	bot_id = req.body.bot_id
+//	version_id = req.body.version_id
+//	dev_token = req.body.dev_token
+//	template_name = req.body.template_name
+//	username = req.body.username
+//	password = req.body.password
+//
+//	start()
+//});
+//
+//app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`)); 

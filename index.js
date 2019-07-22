@@ -24,7 +24,7 @@ var template_name
 var username
 var password
 
-async function add_template_to_webhooks() {
+function add_template_to_webhooks() {
 
 	get_conditions = {
 		url:    base_url + "/conditions",
@@ -33,10 +33,10 @@ async function add_template_to_webhooks() {
 	}
 
 	request.get(get_conditions)
-	.then( async function(data) {
+	.then( function(data) {
 		condition_data = JSON.parse(data)
 
-		condition_data.results.forEach( async function(condition) {
+		condition_data.results.forEach( function(condition) {
 			condition_id = condition.id
 
 			condition.actions.forEach( async function(action) {

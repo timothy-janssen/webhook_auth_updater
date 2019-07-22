@@ -7,6 +7,13 @@ var app = express();
 app.use(bodyParser.json());  
 app.use(bodyParser.urlencoded());
 
+function wait(milleseconds) {
+  return new Promise(resolve => setTimeout(resolve, milleseconds))
+}
+
+var base_url
+var header
+var auth_credentials
 var auth_template_id
 
 var user_id
@@ -16,14 +23,6 @@ var dev_token
 var template_name
 var username
 var password
-
-function wait(milleseconds) {
-  return new Promise(resolve => setTimeout(resolve, milleseconds))
-}
-
-var base_url
-var auth_credentials
-var header
 
 async function add_template_to_webhooks() {
 
@@ -68,22 +67,13 @@ async function add_template_to_webhooks() {
 	})
 }
 
-var get_templates = {
-	url:    base_url + "/webhook_templates",
-   	method:  "GET",
-   	headers: header
-}
+function add_auth_to_bot() {
+	get_templates = {
+		url:    base_url + "/webhook_templates",
+	   	method:  "GET",
+	   	headers: header
+	}
 
-var post_wh_auth_template_body = '{"parameters" : {"username": "' + username + '", "password": "' + password + '"}, "type": "basic", "template_name": "' + template_name + '"}'
-
-var post_wh_auth_template = {
-	url:    base_url + "/webhook_templates/auth_credentials",
-   	method:  "POST",
-   	headers: header,
-   	body: post_wh_auth_template_body 
-}
-
-function start() {
 	request.get(get_templates)
 	.then( function(data) {
 		webhook_data = JSON.parse(data)
@@ -97,6 +87,16 @@ function start() {
 		})
 
 		if ( typeof auth_template_id == 'undefined' ) {
+
+			post_wh_auth_template_body = '{"parameters" : {"username": "' + username + '", "password": "' + password + '"}, "type": "basic", "template_name": "' + template_name + '"}'
+
+			post_wh_auth_template = {
+				url:    base_url + "/webhook_templates/auth_credentials",
+			   	method:  "POST",
+			   	headers: header,
+			   	body: post_wh_auth_template_body 
+			}
+
 			request.post(post_wh_auth_template)
 			.then( function(data) {
 				console.log('Template created')
@@ -130,7 +130,7 @@ app.post('/', function (req, res) {
 		"Content-Type": "application/json"
 	}
     
-    start()
+    add_auth_to_bot()
 })
 
 app.get('/', function (req, res) {

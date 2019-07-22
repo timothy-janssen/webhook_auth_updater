@@ -26,6 +26,14 @@ var get_conditions = {
 var condition_data
 var auth_template_data
 
+var user_id
+var bot_id
+var version_id
+var dev_token
+var template_name
+var username
+var password
+
 async function add_template_to_webhooks() {
 	request.get(get_conditions)
 	.then( async function(data) {
@@ -103,15 +111,7 @@ function start() {
 			})
 		} 
 	})	
-}			
-
-var user_id
-var bot_id
-var version_id
-var dev_token
-var template_name
-var username
-var password
+}
 
 const server = app.createServer((req, res) => {
     if (req.method === 'POST') {

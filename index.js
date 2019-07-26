@@ -64,7 +64,7 @@ function add_template_to_webhooks() {
 				} else {
 					return new Promise(resolve)
 				}
-			}
+			})
 
 			/*condition.actions.forEach( async function(action) {
 				if(action.type == "http"){

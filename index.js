@@ -57,13 +57,13 @@ function add_template_to_webhooks() {
 
 					request.put(put_wh_credentials)
 					.catch(function (err) {
-						//console.log(err)
+						console.log('Could not add ' + template_name + 'to ' + action.value.url)
 					})
 				}
 			})
 		})
 	}).catch(function (err) {
-		//console.log(err)
+		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)
 	})
 }
 
@@ -79,6 +79,7 @@ function add_auth_to_bot() {
 		webhook_data = JSON.parse(data)
 
 		webhook_data.results.auth.forEach( function(auth_template_data) {
+			console.log('Existing template: ' + template_name)
 			if ( auth_template_data.template_name == template_name ) {
 				console.log('Template already created')
 				auth_template_id = auth_template_data.id
@@ -105,9 +106,11 @@ function add_auth_to_bot() {
 		
 				add_template_to_webhooks()
 			}).catch(function (err) {
-				console.log(err)
+				console.log('Template could not be created')
 			})
-		} 
+		} else {
+			console.log('Template id: ' + auth_template_id)
+		}
 	})	
 }
 

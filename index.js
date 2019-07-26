@@ -39,6 +39,34 @@ function add_template_to_webhooks() {
 		condition_data.results.forEach( function(condition) {
 			condition_id = condition.id
 
+			request.mapSeries(condition.actions, function(action){
+				if(action.type == "http"){
+					action_id = action.id
+					webhook_id = action.value.id
+
+					console.log(action.value.http_type + ": " + action.value.url)
+
+					var put_wh_credentials = {
+						url: base_url + "/conditions/" + condition_id + "/actions/" + action_id + "/webhooks/" + webhook_id,
+						method:  "PUT",
+					   	headers: header,
+					   	body: '{ "auth": { "mode": "template", "template_name": "' + template_name + '", "type": "basic", "id": "' + auth_template_id + '"}}'
+					}
+
+					//await wait(1000)
+
+					return request.put(put_wh_credentials) 
+					.delay(250)
+					.catch(function (err) {
+						console.log('Could not add ' + template_name + ' to ' + action.value.url)
+						console.log(err.message)
+					})
+				} else {
+					return new Promise(resolve)
+				}
+			  	return send(...)
+			}
+
 			condition.actions.forEach( async function(action) {
 				if(action.type == "http"){
 					action_id = action.id

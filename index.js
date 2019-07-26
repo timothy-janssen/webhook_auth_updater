@@ -53,7 +53,7 @@ function add_template_to_webhooks() {
 					   	body: '{ "auth": { "mode": "template", "template_name": "' + template_name + '", "type": "basic", "id": "' + auth_template_id + '"}}'
 					}
 
-					await wait(1000)
+					//await wait(1000)
 
 					request.put(put_wh_credentials)
 					.catch(function (err) {

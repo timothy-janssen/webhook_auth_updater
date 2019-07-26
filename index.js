@@ -57,7 +57,8 @@ function add_template_to_webhooks() {
 
 					request.put(put_wh_credentials)
 					.catch(function (err) {
-						console.log('Could not add ' + template_name + 'to ' + action.value.url)
+						console.log('Could not add ' + template_name + ' to ' + action.value.url)
+						console.log(err.message)
 					})
 				}
 			})

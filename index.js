@@ -55,7 +55,7 @@ function add_template_to_webhooks() {
 					   	body: '{ "auth": { "mode": "template", "template_name": "' + template_name + '", "type": "basic", "id": "' + auth_template_id + '"}}'
 					}
 
-					await wait(500)
+					//await wait(500)
 					elapsed = ( Date.now() - start ) / 1000
 					console.log("seconds elapsed = " + elapsed)
 
@@ -76,6 +76,7 @@ function add_template_to_webhooks() {
 						console.log(err.message)
 						console.log('*************************************')
 					})
+					.delay(250)
 				} else {
 
 				}

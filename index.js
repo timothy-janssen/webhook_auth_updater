@@ -92,6 +92,7 @@ function add_template_to_webhooks() {
 		})
 	}).catch(function (err) {
 		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)
+		console.log(err.message)
 	})
 }
 
@@ -135,6 +136,7 @@ function add_auth_to_bot() {
 				add_template_to_webhooks()
 			}).catch(function (err) {
 				console.log('Template could not be created')
+				console.log(err.message)
 			})
 		} else {
 			console.log('Template id: ' + auth_template_id)
@@ -166,8 +168,8 @@ app.post('/add_auth', function (req, res) {
     	res.end(`Added ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}`)
     })
     .catch ( function (err) {
-    	console.log(err)
     	res.end(`There was an error with your request`)
+    	console.log(err.message)
     })
 })
 

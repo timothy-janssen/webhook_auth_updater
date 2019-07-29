@@ -56,7 +56,7 @@ function add_template_to_webhooks() {
 
 					//await wait(1000)
 
-					return promise.put(put_wh_credentials) 
+					return request.put(put_wh_credentials) 
 					.delay(250)
 					.then(function (){
 						console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)

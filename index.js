@@ -12,7 +12,7 @@ function wait(milleseconds) {
   return new Promise(resolve => setTimeout(resolve, milleseconds))
 }
 
-var start = Date.now();
+var start
 var elapsed
 
 var base_url
@@ -28,6 +28,25 @@ var template_name
 var username
 var password
 var skip_existing_auth
+
+function reset_vars() {
+	start = Date.now()
+	elapsed = 0 
+
+	base_url = undefined
+	header = undefined
+	auth_credentials = undefined
+	auth_template_id = undefined
+
+	user_id = undefined
+	bot_id = undefined
+	version_id = undefined
+	dev_token = undefined
+	template_name = undefined
+	username = undefined
+	password = undefined
+	skip_existing_auth = undefined
+}
 
 function add_template_to_webhooks() {
 
@@ -163,6 +182,9 @@ function add_auth_to_bot() {
 }
 
 app.post('/add_auth', function (req, res) {
+
+	reset_vars()
+	
 	user_id = req.body.user_id
 	bot_id = req.body.bot_id
 	version_id = req.body.version_id
@@ -215,7 +237,7 @@ app.get('/', function (req, res) {
                 Template Name: <input type="text" name="template_name" /><br>
                 Template Username: <input type="text" name="username" /><br>
                 Template Password: <input type="text" name="password" /><br>
-                <input type="checkbox" name="skip_existing_auth" value=true/> Skip webhooks with existing auth info<br>
+                <input type="checkbox" name="skip_existing_auth" value=true/> Re-run and skip webhooks with existing auth info<br>
                 <button>Add Auth data</button>
             </form>
         </body>

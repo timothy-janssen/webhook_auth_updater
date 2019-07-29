@@ -27,6 +27,7 @@ var dev_token
 var template_name
 var username
 var password
+var override_existing_auth
 
 function add_template_to_webhooks() {
 
@@ -59,24 +60,25 @@ function add_template_to_webhooks() {
 					elapsed = ( Date.now() - start ) / 1000
 					console.log("seconds elapsed = " + elapsed)
 
-					return request.put(put_wh_credentials) 
-					//.delay(250)
-					.then( function (val){
-						console.log('*************************************')
-						console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)
-						elapsed = ( Date.now() - start ) / 1000
-						console.log("seconds elapsed = " + elapsed)
-						console.log('*************************************')
-					})
-					.catch(function (err) {
-						console.log('*************************************')
-						console.log('Could not add ' + template_name + ' to ' + action.value.url)
-						elapsed = ( Date.now() - start ) / 1000
-						console.log("seconds elapsed = " + elapsed)
-						console.log(err.message)
-						console.log('*************************************')
-					})
-					//.delay(250)
+					if(!override_existing_auth || action.value.auth === null) {
+						return request.put(put_wh_credentials) 
+						//.delay(250)
+						.then( function (val){
+							console.log('*************************************')
+							console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)
+							elapsed = ( Date.now() - start ) / 1000
+							console.log("seconds elapsed = " + elapsed)
+							console.log('*************************************')
+						})
+						.catch(function (err) {
+							console.log('*************************************')
+							console.log('Could not add ' + template_name + ' to ' + action.value.url)
+							elapsed = ( Date.now() - start ) / 1000
+							console.log("seconds elapsed = " + elapsed)
+							console.log(err.message)
+							console.log('*************************************')
+						})	
+					}
 				} else {
 
 				}
@@ -166,6 +168,7 @@ app.post('/add_auth', function (req, res) {
 	template_name = req.body.template_name
 	username = req.body.username
 	password = req.body.password
+	override_existing_auth = req.body.rerun
 
 	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
 
@@ -204,6 +207,7 @@ app.get('/', function (req, res) {
                 Template Name: <input type="text" name="template_name" /><br>
                 Template Username: <input type="text" name="username" /><br>
                 Template Password: <input type="text" name="password" /><br>
+                <input type="checkbox" name="rerun" value=true/> Skip webhooks with existing auth info<br>
                 <button>Add Auth data</button>
             </form>
         </body>

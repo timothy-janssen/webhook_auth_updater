@@ -44,7 +44,7 @@ function add_template_to_webhooks() {
 		condition_data.results.forEach( function(condition) {
 			condition_id = condition.id
 
-			promise.mapSeries(condition.actions, async function(action){
+			/*promise.mapSeries(condition.actions, async function(action){
 				if(action.type == "http" && (!override_existing_auth || !action.value.auth) ){
 					action_id = action.id
 					webhook_id = action.value.id
@@ -80,14 +80,12 @@ function add_template_to_webhooks() {
 				} else {
 
 				}
-			})
+			})*/
 
-			/*condition.actions.forEach( async function(action) {
-				if(action.type == "http"){
+			condition.actions.forEach( async function(action) {
+				if(action.type == "http" && (!override_existing_auth || !action.value.auth) ){
 					action_id = action.id
 					webhook_id = action.value.id
-
-					console.log(action.value.http_type + ": " + action.value.url)
 
 					var put_wh_credentials = {
 						url: base_url + "/conditions/" + condition_id + "/actions/" + action_id + "/webhooks/" + webhook_id,
@@ -97,12 +95,19 @@ function add_template_to_webhooks() {
 					}
 
 					request.put(put_wh_credentials)
+					.then( function (val){
+						console.log('*************************************')
+						console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)
+						console.log('*************************************')
+					})
 					.catch(function (err) {
+						console.log('*************************************')
 						console.log('Could not add ' + template_name + ' to ' + action.value.url)
 						console.log(err.message)
+						console.log('*************************************')
 					})
 				}
-			})*/
+			})
 		})
 	}).catch(function (err) {
 		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)

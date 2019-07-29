@@ -83,7 +83,7 @@ function add_template_to_webhooks() {
 			})*/
 
 			condition.actions.forEach( async function(action) {
-				if(action.type == "http" && (!override_existing_auth || !action.value.auth) ){
+				if(action.type == "http" && (override_existing_auth || !action.value.auth) ){
 					action_id = action.id
 					webhook_id = action.value.id
 

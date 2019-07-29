@@ -45,7 +45,7 @@ function add_template_to_webhooks() {
 			condition_id = condition.id
 
 			promise.mapSeries(condition.actions, async function(action){
-				if(action.type == "http"){
+				if(action.type == "http" && (!override_existing_auth || !action.value.auth) ){
 					action_id = action.id
 					webhook_id = action.value.id
 
@@ -56,11 +56,9 @@ function add_template_to_webhooks() {
 					   	body: '{ "auth": { "mode": "template", "template_name": "' + template_name + '", "type": "basic", "id": "' + auth_template_id + '"}}'
 					}
 
-					//await wait(500)
-					elapsed = ( Date.now() - start ) / 1000
-					console.log("seconds elapsed = " + elapsed)
+					console.log(put_wh_credentials.url)
 
-					if(!override_existing_auth || !action.value.auth) {
+					if( true ) {
 						return request.put(put_wh_credentials) 
 						//.delay(250)
 						.then( function (val){
@@ -167,7 +165,7 @@ app.post('/add_auth', function (req, res) {
 	template_name = req.body.template_name
 	username = req.body.username
 	password = req.body.password
-	override_existing_auth = req.body.rerun
+	override_existing_auth = req.body.override_existing_auth
 
 	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
 
@@ -206,7 +204,7 @@ app.get('/', function (req, res) {
                 Template Name: <input type="text" name="template_name" /><br>
                 Template Username: <input type="text" name="username" /><br>
                 Template Password: <input type="text" name="password" /><br>
-                <input type="checkbox" name="rerun" value=true/> Skip webhooks with existing auth info<br>
+                <input type="checkbox" name="override_existing_auth" value=true/> Skip webhooks with existing auth info<br>
                 <button>Add Auth data</button>
             </form>
         </body>

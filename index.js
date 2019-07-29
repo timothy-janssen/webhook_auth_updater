@@ -56,13 +56,13 @@ function add_template_to_webhooks() {
 					}
 
 					await wait(500)
-					elapsed = Date.now() - start
+					elapsed = ( Date.now() - start ) / 1000
 					console.log("seconds elapsed = " + elapsed)
 
 					return request.put(put_wh_credentials) 
 					//.delay(250)
 					.then(function (){
-						elapsed = Date.now() - start
+						elapsed = ( Date.now() - start ) / 1000
 						console.log("seconds elapsed = " + elapsed)
 						console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)
 					})
@@ -72,7 +72,7 @@ function add_template_to_webhooks() {
 					})
 				} else {
 					//return new Promise().resolve(true)
-					elapsed = Date.now() - start
+					elapsed = ( Date.now() - start ) / 1000
 					console.log("seconds elapsed = " + elapsed)
 				}
 			})

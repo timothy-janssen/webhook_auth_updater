@@ -172,6 +172,12 @@ app.post('/add_auth', function (req, res) {
 	password = req.body.password
 	override_existing_auth = req.body.override_existing_auth
 
+	if (override_existing_auth) {
+		console.log("Applying Authentication to all webhooks")
+	} else {
+		console.log("Applying Authentication to only webhooks without existing data")
+	}
+
 	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
 
 	header = {

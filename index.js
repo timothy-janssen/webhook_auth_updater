@@ -45,7 +45,7 @@ function add_template_to_webhooks() {
 					action_id = action.id
 					webhook_id = action.value.id
 
-					console.log(action.value.http_type + ": " + action.value.url)
+					//console.log(action.value.http_type + ": " + action.value.url)
 
 					var put_wh_credentials = {
 						url: base_url + "/conditions/" + condition_id + "/actions/" + action_id + "/webhooks/" + webhook_id,
@@ -58,6 +58,9 @@ function add_template_to_webhooks() {
 
 					return request.put(put_wh_credentials) 
 					.delay(250)
+					.then(function (){
+						console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)
+					})
 					.catch(function (err) {
 						console.log('Could not add ' + template_name + ' to ' + action.value.url)
 						console.log(err.message)

@@ -27,7 +27,7 @@ var dev_token
 var template_name
 var username
 var password
-var override_existing_auth
+var skip_existing_auth
 
 function add_template_to_webhooks() {
 
@@ -83,7 +83,7 @@ function add_template_to_webhooks() {
 			})*/
 
 			condition.actions.forEach( async function(action) {
-				if(action.type == "http" && (override_existing_auth || !action.value.auth) ){
+				if(action.type == "http" && (!skip_existing_auth || !action.value.auth) ){
 					action_id = action.id
 					webhook_id = action.value.id
 
@@ -170,12 +170,12 @@ app.post('/add_auth', function (req, res) {
 	template_name = req.body.template_name
 	username = req.body.username
 	password = req.body.password
-	override_existing_auth = req.body.override_existing_auth
+	skip_existing_auth = req.body.skip_existing_auth
 
-	if (override_existing_auth) {
-		console.log("Applying Authentication to all webhooks")
-	} else {
+	if (skip_existing_auth) {
 		console.log("Applying Authentication to only webhooks without existing data")
+	} else {
+		console.log("Applying Authentication to all webhooks")
 	}
 
 	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
@@ -215,7 +215,7 @@ app.get('/', function (req, res) {
                 Template Name: <input type="text" name="template_name" /><br>
                 Template Username: <input type="text" name="username" /><br>
                 Template Password: <input type="text" name="password" /><br>
-                <input type="checkbox" name="override_existing_auth" value=true/> Skip webhooks with existing auth info<br>
+                <input type="checkbox" name="skip_existing_auth" value=true/> Skip webhooks with existing auth info<br>
                 <button>Add Auth data</button>
             </form>
         </body>

@@ -2,6 +2,7 @@ const request = require('request-promise');
 const config  = require('./config');
 const express = require('express');
 const bodyParser = require('body-parser')
+var promise = require("bluebird");
 
 var app = express();
 app.use(bodyParser.json());  
@@ -39,7 +40,7 @@ function add_template_to_webhooks() {
 		condition_data.results.forEach( function(condition) {
 			condition_id = condition.id
 
-			request.mapSeries(condition.actions, function(action){
+			promise.mapSeries(condition.actions, function(action){
 				if(action.type == "http"){
 					action_id = action.id
 					webhook_id = action.value.id

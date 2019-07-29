@@ -12,6 +12,9 @@ function wait(milleseconds) {
   return new Promise(resolve => setTimeout(resolve, milleseconds))
 }
 
+var start = Date.now();
+var elapsed
+
 var base_url
 var header
 var auth_credentials
@@ -54,11 +57,15 @@ function add_template_to_webhooks() {
 					   	body: '{ "auth": { "mode": "template", "template_name": "' + template_name + '", "type": "basic", "id": "' + auth_template_id + '"}}'
 					}
 
-					//await wait(1000)
+					await wait(500)
+					elapsed = Date.now() - start
+					console.log("seconds elapsed = " + elapsed)
 
 					return request.put(put_wh_credentials) 
 					//.delay(250)
 					.then(function (){
+						elapsed = Date.now() - start
+						console.log("seconds elapsed = " + elapsed)
 						console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)
 					})
 					.catch(function (err) {
@@ -67,6 +74,8 @@ function add_template_to_webhooks() {
 					})
 				} else {
 					//return new Promise().resolve(true)
+					elapsed = Date.now() - start
+					console.log("seconds elapsed = " + elapsed)
 				}
 			})
 

@@ -38,7 +38,7 @@ function add_template_to_webhooks() {
 
 		condition_data.results.forEach( function(condition) {
 			condition_id = condition.id
-/*
+
 			request.mapSeries(condition.actions, function(action){
 				if(action.type == "http"){
 					action_id = action.id
@@ -64,9 +64,9 @@ function add_template_to_webhooks() {
 				} else {
 					return new Promise(resolve)
 				}
-			})*/
+			})
 
-			condition.actions.forEach( async function(action) {
+			/*condition.actions.forEach( async function(action) {
 				if(action.type == "http"){
 					action_id = action.id
 					webhook_id = action.value.id
@@ -88,7 +88,7 @@ function add_template_to_webhooks() {
 						console.log(err.message)
 					})
 				}
-			})
+			})*/
 		})
 	}).catch(function (err) {
 		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)

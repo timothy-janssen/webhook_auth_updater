@@ -62,18 +62,22 @@ function add_template_to_webhooks() {
 					return request.put(put_wh_credentials) 
 					//.delay(250)
 					.then(function (){
+						console.log('*************************************')
+						console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)
 						elapsed = ( Date.now() - start ) / 1000
 						console.log("seconds elapsed = " + elapsed)
-						console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)
+						console.log('*************************************')
 					})
 					.catch(function (err) {
+						console.log('*************************************')
 						console.log('Could not add ' + template_name + ' to ' + action.value.url)
+						elapsed = ( Date.now() - start ) / 1000
+						console.log("seconds elapsed = " + elapsed)
 						console.log(err.message)
+						console.log('*************************************')
 					})
 				} else {
-					//return new Promise().resolve(true)
-					elapsed = ( Date.now() - start ) / 1000
-					console.log("seconds elapsed = " + elapsed)
+
 				}
 			})
 
@@ -171,7 +175,7 @@ app.post('/add_auth', function (req, res) {
 		"Connection": "keep-alive",
 		"Content-Type": "application/json"
 	}
-	
+
 	start = Date.now();
     
     add_auth_to_bot()

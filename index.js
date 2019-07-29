@@ -60,7 +60,7 @@ function add_template_to_webhooks() {
 					elapsed = ( Date.now() - start ) / 1000
 					console.log("seconds elapsed = " + elapsed)
 
-					if(!override_existing_auth || action.value.auth === null) {
+					if(!override_existing_auth || !action.value.auth) {
 						return request.put(put_wh_credentials) 
 						//.delay(250)
 						.then( function (val){
@@ -124,9 +124,8 @@ function add_auth_to_bot() {
 		webhook_data = JSON.parse(data)
 
 		webhook_data.results.auth.forEach( function(auth_template_data) {
-			console.log('Existing template: ' + template_name)
 			if ( auth_template_data.template_name == template_name ) {
-				console.log('Template already created')
+				console.log('Existing template: ' + template_name)
 				auth_template_id = auth_template_data.id
 				return add_template_to_webhooks()
 			}
@@ -145,10 +144,10 @@ function add_auth_to_bot() {
 
 			request.post(post_wh_auth_template)
 			.then( function(data) {
-				console.log('Template created')
+				console.log('Template created: ' + template_name)
 				auth_template_data = JSON.parse(data);
 				auth_template_id = auth_template_data.results.id
-		
+				console.log('Template id: ' + auth_template_id)
 				return add_template_to_webhooks()
 			}).catch(function (err) {
 				console.log('Template could not be created')

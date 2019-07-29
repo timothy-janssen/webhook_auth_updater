@@ -61,7 +61,7 @@ function add_template_to_webhooks() {
 
 					return request.put(put_wh_credentials) 
 					//.delay(250)
-					.then(function (){
+					.then( function (val){
 						console.log('*************************************')
 						console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)
 						elapsed = ( Date.now() - start ) / 1000

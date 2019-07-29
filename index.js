@@ -171,6 +171,8 @@ app.post('/add_auth', function (req, res) {
 		"Connection": "keep-alive",
 		"Content-Type": "application/json"
 	}
+	
+	start = Date.now();
     
     add_auth_to_bot()
     .then( function() {

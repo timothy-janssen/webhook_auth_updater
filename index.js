@@ -76,7 +76,7 @@ function add_template_to_webhooks() {
 						console.log(err.message)
 						console.log('*************************************')
 					})
-					.delay(250)
+					//.delay(250)
 				} else {
 
 				}

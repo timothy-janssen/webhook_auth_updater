@@ -116,13 +116,17 @@ function add_template_to_webhooks() {
 					request.put(put_wh_credentials)
 					.then( function (val){
 						console.log('*************************************')
-						console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)
+						console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)							
+						elapsed = ( Date.now() - start ) / 1000
+						console.log("seconds elapsed = " + elapsed)
 						console.log('*************************************')
 					})
 					.catch(function (err) {
 						console.log('*************************************')
 						console.log('Could not add ' + template_name + ' to ' + action.value.url)
 						console.log(err.message)
+						elapsed = ( Date.now() - start ) / 1000
+						console.log("seconds elapsed = " + elapsed)
 						console.log('*************************************')
 					})
 				}
@@ -131,6 +135,8 @@ function add_template_to_webhooks() {
 	}).catch(function (err) {
 		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)
 		console.log(err.message)
+		elapsed = ( Date.now() - start ) / 1000
+		console.log("seconds elapsed = " + elapsed)
 	})
 }
 
@@ -141,7 +147,7 @@ function add_auth_to_bot() {
 	   	headers: header
 	}
 
-	return request.get(get_templates)
+	request.get(get_templates)
 	.then( function(data) {
 		webhook_data = JSON.parse(data)
 
@@ -149,7 +155,7 @@ function add_auth_to_bot() {
 			if ( auth_template_data.template_name == template_name ) {
 				console.log('Existing template: ' + template_name)
 				auth_template_id = auth_template_data.id
-				return add_template_to_webhooks()
+				add_template_to_webhooks()
 			}
 		})
 
@@ -170,7 +176,7 @@ function add_auth_to_bot() {
 				auth_template_data = JSON.parse(data);
 				auth_template_id = auth_template_data.results.id
 				console.log('Template id: ' + auth_template_id)
-				return add_template_to_webhooks()
+				add_template_to_webhooks()
 			}).catch(function (err) {
 				console.log('Template could not be created')
 				console.log(err.message)
@@ -184,7 +190,7 @@ function add_auth_to_bot() {
 app.post('/add_auth', function (req, res) {
 
 	reset_vars()
-	
+
 	user_id = req.body.user_id
 	bot_id = req.body.bot_id
 	version_id = req.body.version_id
@@ -209,8 +215,6 @@ app.post('/add_auth', function (req, res) {
 		"Connection": "keep-alive",
 		"Content-Type": "application/json"
 	}
-
-	start = Date.now();
     
     add_auth_to_bot()
     .then( function() {

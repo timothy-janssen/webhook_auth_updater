@@ -36,7 +36,7 @@ function add_template_to_webhooks() {
 	   	headers: header
 	}
 
-	request.get(get_conditions)
+	return request.get(get_conditions)
 	.then( function(data) {
 		condition_data = JSON.parse(data)
 
@@ -126,7 +126,7 @@ function add_auth_to_bot() {
 			if ( auth_template_data.template_name == template_name ) {
 				console.log('Template already created')
 				auth_template_id = auth_template_data.id
-				add_template_to_webhooks()
+				return add_template_to_webhooks()
 			}
 		})
 
@@ -147,7 +147,7 @@ function add_auth_to_bot() {
 				auth_template_data = JSON.parse(data);
 				auth_template_id = auth_template_data.results.id
 		
-				add_template_to_webhooks()
+				return add_template_to_webhooks()
 			}).catch(function (err) {
 				console.log('Template could not be created')
 				console.log(err.message)

@@ -63,7 +63,7 @@ function add_template_to_webhooks() {
 						console.log(err.message)
 					})
 				} else {
-					return new Promise().resolve()
+					return new Promise().resolve(true)
 				}
 			})
 

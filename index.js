@@ -249,4 +249,44 @@ app.get('/', function (req, res) {
     `);
 });
 
+app.post('/add_auth_test', function (req, res) {
+
+	header = {
+	   	"Authorization": "Token 06be8257dac67fabeac55b32497eb475",
+	   	"Accept": "application/json",
+		"Cache-Control": "no-cache",
+		"Connection": "keep-alive",
+		"Content-Type": "application/json"
+	}
+
+	get_templates = {
+		url:    "https://api.cai.tools.sap/build/v1/users/successfactors-sap/bots/digital-assistant-nate/versions/test-1/builder/webhook_templates",
+	   	method:  "GET",
+	   	headers: header
+	}
+
+	var req_array = [get_templates, get_templates, get_templates, get_templates]
+
+
+	start = Date.now()
+	elapsed = 0 
+
+	Promise.mapSeries(req_array, function(requ) {
+
+		return new Promise.delay(500)(resolve => {
+			
+			elapsed = ( Date.now() - start ) / 1000
+			console.log("seconds elapsed = " + elapsed)
+
+			return request.get(requ)
+			.then( function(data) {
+				return "returned data"
+			})
+		});
+		
+	}).then( function(result){
+		console.log(result)
+	})
+})
+
 app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`));

@@ -147,7 +147,7 @@ function add_auth_to_bot() {
 	   	headers: header
 	}
 
-	request.get(get_templates)
+	return request.get(get_templates)
 	.then( function(data) {
 		webhook_data = JSON.parse(data)
 

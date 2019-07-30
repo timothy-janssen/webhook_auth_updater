@@ -1,3 +1,4 @@
+const request = require('request-promise');
 const rp = require('request-promise');
 const config  = require('./config');
 const express = require('express');

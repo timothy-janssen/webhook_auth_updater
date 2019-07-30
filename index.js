@@ -1,8 +1,8 @@
-const request = require('request-promise');
+const rp = require('request-promise');
 const config  = require('./config');
 const express = require('express');
 const bodyParser = require('body-parser')
-var promise = require("bluebird");
+//var promise = require("bluebird");
 
 var app = express();
 app.use(bodyParser.json());  
@@ -273,16 +273,28 @@ app.post('/add_auth_test', function (req, res) {
 
 	Promise.mapSeries(req_array, function(requ) {
 
-		return new Promise.delay(500)(resolve => {
+		return request.get(requ)
+		.promise()
+		.delay(1000)
+		.then( function(data) {
+			elapsed = ( Date.now() - start ) / 1000
+			console.log("seconds elapsed = " + elapsed)
+		})
+
+/*		return new Promise.delay(500)(resolve => {
 			
 			elapsed = ( Date.now() - start ) / 1000
 			console.log("seconds elapsed = " + elapsed)
 
 			return request.get(requ)
+			.promise()
+			.delay(1000)
+
+
 			.then( function(data) {
 				return "returned data"
 			})
-		});
+		});*/
 		
 	}).then( function(result){
 		console.log(result)

@@ -52,7 +52,7 @@ function reset_vars() {
 	log_data = ''
 }
 
-function add_template_to_webhooks() {
+function add_template_to_webhooks(callback) {
 
 	get_conditions = {
 		url:    base_url + "/conditions",
@@ -137,6 +137,7 @@ function add_template_to_webhooks() {
 					})
 				}
 			})
+			callback()
 		})
 	}).catch(function (err) {
 		log_data += 'Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id
@@ -163,7 +164,7 @@ function add_auth_to_bot(callback) {
 				log_data += 'Existing template: ' + template_name
 				console.log('Existing template: ' + template_name)
 				auth_template_id = auth_template_data.id
-				add_template_to_webhooks()
+				add_template_to_webhooks(callback)
 			}
 		})
 
@@ -186,7 +187,7 @@ function add_auth_to_bot(callback) {
 				auth_template_id = auth_template_data.results.id
 				log_data += 'Template id: ' + auth_template_id
 				console.log('Template id: ' + auth_template_id)
-				add_template_to_webhooks()
+				add_template_to_webhooks(callback)
 			}).catch(function (err) {
 				log_data += 'Template could not be created'
 				console.log('Template could not be created')

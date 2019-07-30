@@ -29,8 +29,6 @@ var username
 var password
 var skip_existing_auth
 
-var log_data
-
 function reset_vars() {
 	start = Date.now()
 	elapsed = 0 
@@ -48,11 +46,9 @@ function reset_vars() {
 	username = undefined
 	password = undefined
 	skip_existing_auth = undefined
-
-	log_data = ''
 }
 
-function add_template_to_webhooks(callback) {
+function add_template_to_webhooks() {
 
 	get_conditions = {
 		url:    base_url + "/conditions",
@@ -120,7 +116,6 @@ function add_template_to_webhooks(callback) {
 					request.put(put_wh_credentials)
 					.then( function (val){
 						console.log('*************************************')
-						log_data += "Added Auth to " + action.value.http_type + ": " + action.value.url
 						console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)							
 						elapsed = ( Date.now() - start ) / 1000
 						console.log("seconds elapsed = " + elapsed)
@@ -128,7 +123,6 @@ function add_template_to_webhooks(callback) {
 					})
 					.catch(function (err) {
 						console.log('*************************************')
-						log_data += 'Could not add ' + template_name + ' to ' + action.value.url
 						console.log('Could not add ' + template_name + ' to ' + action.value.url)
 						console.log(err.message)
 						elapsed = ( Date.now() - start ) / 1000
@@ -137,10 +131,8 @@ function add_template_to_webhooks(callback) {
 					})
 				}
 			})
-			callback()
 		})
 	}).catch(function (err) {
-		log_data += 'Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id
 		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)
 		console.log(err.message)
 		elapsed = ( Date.now() - start ) / 1000
@@ -148,7 +140,7 @@ function add_template_to_webhooks(callback) {
 	})
 }
 
-function add_auth_to_bot(callback) {
+function add_auth_to_bot() {
 	get_templates = {
 		url:    base_url + "/webhook_templates",
 	   	method:  "GET",
@@ -161,10 +153,9 @@ function add_auth_to_bot(callback) {
 
 		webhook_data.results.auth.forEach( function(auth_template_data) {
 			if ( auth_template_data.template_name == template_name ) {
-				log_data += 'Existing template: ' + template_name
 				console.log('Existing template: ' + template_name)
 				auth_template_id = auth_template_data.id
-				add_template_to_webhooks(callback)
+				add_template_to_webhooks()
 			}
 		})
 
@@ -181,20 +172,16 @@ function add_auth_to_bot(callback) {
 
 			request.post(post_wh_auth_template)
 			.then( function(data) {
-				log_data += 'Template created: ' + template_name
 				console.log('Template created: ' + template_name)
 				auth_template_data = JSON.parse(data);
 				auth_template_id = auth_template_data.results.id
-				log_data += 'Template id: ' + auth_template_id
 				console.log('Template id: ' + auth_template_id)
-				add_template_to_webhooks(callback)
+				add_template_to_webhooks()
 			}).catch(function (err) {
-				log_data += 'Template could not be created'
 				console.log('Template could not be created')
 				console.log(err.message)
 			})
 		} else {
-			log_data += 'Template id: ' + auth_template_id
 			console.log('Template id: ' + auth_template_id)
 		}
 	})	
@@ -229,8 +216,9 @@ app.post('/add_auth', function (req, res) {
 		"Content-Type": "application/json"
 	}
     
-    add_auth_to_bot( function(log_data) {
-    	res.send(`Added ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}` + log_data)
+    add_auth_to_bot()
+    .then( function() {
+    	res.end(`Added ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}`)
     })
     .catch ( function (err) {
     	res.end(`There was an error with your request`)

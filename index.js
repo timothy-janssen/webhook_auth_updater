@@ -1,5 +1,5 @@
 const request = require('request-promise');
-const rp = require('request-promise');
+//const rp = require('request-promise');
 const config  = require('./config');
 const express = require('express');
 const bodyParser = require('body-parser')
@@ -272,11 +272,11 @@ app.post('/add_auth_test', function (req, res) {
 	start = Date.now()
 	elapsed = 0 
 
-	rp()
+	request()
 	.promise()
 	.mapSeries(req_array, function(requ) {
 
-		return rp.get(requ)
+		return request.get(requ)
 		.promise()
 		.delay(1000)
 		.then( function(data) {

@@ -57,8 +57,9 @@ function add_auth_to_bot(res) {
 
 		webhook_data.results.auth.forEach( function(auth_template_data) {
 			if ( auth_template_data.template_name == template_name ) {
-				console.log('Existing template: ' + template_name)
 				auth_template_id = auth_template_data.id
+				res.write(`Existing template: ${template_name}\n`)
+				console.log('Existing template: ' + template_name)
 				console.log('Template id: ' + auth_template_id)
 				return add_template_to_webhooks(res)
 			}
@@ -77,12 +78,15 @@ function add_auth_to_bot(res) {
 
 			return rp.post(post_wh_auth_template)
 			.then( function(data) {
-				console.log('Template created: ' + template_name)
 				auth_template_data = JSON.parse(data);
 				auth_template_id = auth_template_data.results.id
+				res.write(`Template created: ${template_name}\n`)
+				console.log('Template created: ' + template_name)
 				console.log('Template id: ' + auth_template_id)
 				return add_template_to_webhooks(res)
 			}).catch(function (err) {
+				res.write(`Template could not be created\n`)
+				res.end()
 				console.log('Template could not be created')
 				console.log(err.message)
 			})
@@ -137,30 +141,32 @@ function add_template_to_webhooks(res) {
 		return call_add_auths(put_wh_cred_array, res)
 
 	}).catch(function (err) {
+		res.write(`Could not get the conditions from the bot ${user_id}/${bot_id}/${version_id}\n`)
+		res.end()
 		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)
 		console.log(err.message)
 	})
 }
 
 function call_add_auths(reqs, res) {
+	var err_count = 0;
+	var suc_count = 0;
+
 	return Promise.map(reqs, function(req) {
 		return rp.put(req.opt)
-		.then( function (val){
-			console.log(req.suc_msg)							
-			//elapsed = ( Date.now() - start ) / 1000
-			//console.log("seconds elapsed = " + elapsed)
+		.then( function (){
+			suc_count++
+			console.log(req.suc_msg)
 		})
 		.catch(function (err) {
+			err_count++
 			console.log(req.err_msg)
 			console.log(err.message)
-			//elapsed = ( Date.now() - start ) / 1000
-			//console.log("seconds elapsed = " + elapsed)
 		})
 	}, {concurrency: 5})
 	.then( function(val) {
-		res.write("Added authentication to " + val.length + " webhooks")
+		res.write(`Added authentication to ${suc_count} webhooks (with ${err_count} errors)`)
 		res.end()
-		console.log("Done " + val.length)
 	})
 }
 
@@ -188,7 +194,7 @@ app.post('/add_auth', function (req, res) {
     
     add_auth_to_bot(res)
     .then( function() {
-    	res.write(`Adding ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}`)
+    	res.write(`Adding ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}\n`)
     })
     .catch ( function (err) {
     	res.end(`There was an error with your request`)

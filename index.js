@@ -132,6 +132,8 @@ function add_template_to_webhooks() {
 						suc_msg: 'Added Auth to ' + action.value.http_type + ': ' + action.value.url
 					}
 
+					console.log(action.value.url)
+
 					put_wh_cred_array.push(wh_cred_obj)
 				}
 			})
@@ -165,6 +167,9 @@ function call_add_auths(reqs) {
 			console.log("seconds elapsed = " + elapsed)
 			console.log('*************************************')
 		})
+	
+	.then( function(val) {
+		console.log("Done " + val.length())
 	})
 }
 
@@ -199,7 +204,7 @@ app.post('/add_auth', function (req, res) {
     
     add_auth_to_bot()
     .then( function() {
-    	res.end(`Added ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}`)
+    	res.end(`Adding ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}`)
     })
     .catch ( function (err) {
     	res.end(`There was an error with your request`)

@@ -42,6 +42,8 @@ function reset_vars() {
 	username = undefined
 	password = undefined
 	skip_existing_auth = undefined
+
+	put_wh_cred_array = []
 } 
 
 function add_auth_to_bot(res) {
@@ -199,7 +201,7 @@ app.post('/add_auth', function (req, res) {
     .catch ( function (err) {
     	res.write(`<p>There was an error with your request</p>`)
     	res.write(`<p>First, check your Owner/Bot/Version ID's</p>`)
-    	res.write(`<p>Then, check your token here: <a href="https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens">https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens</a></p>`)
+    	res.write(`<p>Then, check your developer token here: <a href="https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens">https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens</a></p>`)
     	res.end()
     	console.log(err.message)
     })

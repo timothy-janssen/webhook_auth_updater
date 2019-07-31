@@ -143,7 +143,7 @@ function add_template_to_webhooks() {
 }
 
 function call_add_auths(reqs) {
-	Promise.mapSeries(reqs, function(req) {
+	Promise.map(reqs, function(req) {
 		return rp.put(req.opt)
 		.then( function (val){
 			console.log(req.suc_msg)							
@@ -156,7 +156,7 @@ function call_add_auths(reqs) {
 			//elapsed = ( Date.now() - start ) / 1000
 			//console.log("seconds elapsed = " + elapsed)
 		})
-	})
+	}, {concurrency: 5})
 	.then( function(val) {
 		console.log("Done " + val.length)
 	})

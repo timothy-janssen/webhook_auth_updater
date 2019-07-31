@@ -198,7 +198,7 @@ app.post('/add_auth', function (req, res) {
     })
     .catch ( function (err) {
     	res.write(`<p>There was an error with your request</p>`)
-    	res.write(`<p>Check your token </p><a href="https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens">here</a><p> (if this link doesn't work, then check the Owner/Bot ID's)`)
+    	res.write(`Check your token <a href="https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens">https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens</a> (if this link doesn't work, then check the Owner/Bot ID's)`)
     	res.end()
     	console.log(err.message)
     })

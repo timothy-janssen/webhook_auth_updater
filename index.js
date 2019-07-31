@@ -1,9 +1,9 @@
 const request = require('request-promise');
-//const rp = require('request-promise');
+const rp = require('request-promise');
 const config  = require('./config');
 const express = require('express');
 const bodyParser = require('body-parser')
-//var promise = require("bluebird");
+var Promise = require("bluebird");
 
 var app = express();
 app.use(bodyParser.json());  
@@ -277,7 +277,7 @@ app.post('/add_auth_test', function (req, res) {
 
 		console.log("here")
 
-		return request.get(requ)
+		return rp.get(requ)
 		.promise()
 		.delay(1000)
 		.then( function(data) {

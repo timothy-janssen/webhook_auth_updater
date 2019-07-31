@@ -197,7 +197,7 @@ app.post('/add_auth', function (req, res) {
     	res.write(`Adding ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}\n`)
     })
     .catch ( function (err) {
-    	res.send(`There was an error with your request \n check your token: https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens`)
+    	res.send(`There was an error with your request \nCheck your token: https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens`)
     	console.log(err.message)
     })
 })

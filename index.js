@@ -219,14 +219,14 @@ function call_add_auths(reqs) {
 		//.delay(1000)
 		.then( function (val){
 			console.log('*************************************')
-			console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)							
+			//console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)							
 			elapsed = ( Date.now() - start ) / 1000
 			console.log("seconds elapsed = " + elapsed)
 			console.log('*************************************')
 		})
 		.catch(function (err) {
 			console.log('*************************************')
-			console.log('Could not add ' + template_name + ' to ' + action.value.url)
+			//console.log('Could not add ' + template_name + ' to ' + action.value.url)
 			console.log(err.message)
 			elapsed = ( Date.now() - start ) / 1000
 			console.log("seconds elapsed = " + elapsed)

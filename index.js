@@ -1,17 +1,12 @@
-const request = require('request-promise');
-const rp = require('request-promise');
-const config  = require('./config');
-const express = require('express');
-const bodyParser = require('body-parser')
-var Promise = require("bluebird");
+const rp 		= require('request-promise');
+const Promise 	= require("bluebird");
+const express 	= require('express');
+const bp 		= require('body-parser')
+const config  	= require('./config');
 
 var app = express();
-app.use(bodyParser.json());  
-app.use(bodyParser.urlencoded());
-
-function wait(milleseconds) {
-  return new Promise(resolve => setTimeout(resolve, milleseconds))
-}
+app.use(bp.json());  
+app.use(bp.urlencoded());
 
 var start
 var elapsed
@@ -56,7 +51,7 @@ function add_auth_to_bot() {
 	   	headers: header
 	}
 
-	return request.get(get_templates)
+	return rp.get(get_templates)
 	.then( function(data) {
 		webhook_data = JSON.parse(data)
 
@@ -80,7 +75,7 @@ function add_auth_to_bot() {
 			   	body: post_wh_auth_template_body 
 			}
 
-			request.post(post_wh_auth_template)
+			rp.post(post_wh_auth_template)
 			.then( function(data) {
 				console.log('Template created: ' + template_name)
 				auth_template_data = JSON.parse(data);
@@ -107,7 +102,7 @@ function add_template_to_webhooks() {
 	   	headers: header
 	}
 
-	request.get(get_conditions)
+	rp.get(get_conditions)
 	.then( function(data) {
 		condition_data = JSON.parse(data)
 
@@ -150,22 +145,16 @@ function add_template_to_webhooks() {
 function call_add_auths(reqs) {
 	Promise.mapSeries(reqs, function(req) {
 		return rp.put(req.opt)
-		//.promise()
-		//.delay(1000)
 		.then( function (val){
-			console.log('*************************************')
 			console.log(req.suc_msg)							
-			elapsed = ( Date.now() - start ) / 1000
-			console.log("seconds elapsed = " + elapsed)
-			console.log('*************************************')
+			//elapsed = ( Date.now() - start ) / 1000
+			//console.log("seconds elapsed = " + elapsed)
 		})
 		.catch(function (err) {
-			console.log('*************************************')
 			console.log(req.err_msg)
 			console.log(err.message)
-			elapsed = ( Date.now() - start ) / 1000
-			console.log("seconds elapsed = " + elapsed)
-			console.log('*************************************')
+			//elapsed = ( Date.now() - start ) / 1000
+			//console.log("seconds elapsed = " + elapsed)
 		})
 	})
 	.then( function(val) {
@@ -184,13 +173,6 @@ app.post('/add_auth', function (req, res) {
 	template_name = req.body.template_name
 	username = req.body.username
 	password = req.body.password
-	skip_existing_auth = req.body.skip_existing_auth
-
-	if (skip_existing_auth) {
-		console.log("Applying Authentication to only webhooks without existing data")
-	} else {
-		console.log("Applying Authentication to all webhooks")
-	}
 
 	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
 
@@ -227,7 +209,6 @@ app.get('/', function (req, res) {
                 Template Name: <input type="text" name="template_name" /><br>
                 Template Username: <input type="text" name="username" /><br>
                 Template Password: <input type="text" name="password" /><br>
-                <input type="checkbox" name="skip_existing_auth" value=true/> Re-run and skip webhooks with existing auth info<br>
                 <button>Add Auth data</button>
             </form>
         </body>

@@ -276,6 +276,8 @@ app.post('/add_auth_test', function (req, res) {
 	.promise()
 	.mapSeries(req_array, function(requ) {
 
+		console.log("here")
+
 		return request.get(requ)
 		.promise()
 		.delay(1000)

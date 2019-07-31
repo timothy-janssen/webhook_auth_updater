@@ -213,9 +213,6 @@ app.get('/', function (req, res) {
 });
 
 function call_add_auths(reqs) {
-	start = Date.now()
-	elapsed = 0 
-
 	Promise.mapSeries(reqs, function(req) {
 		return rp.put(req)
 		.promise()

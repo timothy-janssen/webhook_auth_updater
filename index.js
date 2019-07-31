@@ -214,19 +214,19 @@ app.get('/', function (req, res) {
 
 function call_add_auths(reqs) {
 	Promise.mapSeries(reqs, function(req) {
-		return rp.put(req)
+		return rp.put(req.opt)
 		.promise()
 		//.delay(1000)
 		.then( function (val){
 			console.log('*************************************')
-			//console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)							
+			console.log(req.suc_msg)							
 			elapsed = ( Date.now() - start ) / 1000
 			console.log("seconds elapsed = " + elapsed)
 			console.log('*************************************')
 		})
 		.catch(function (err) {
 			console.log('*************************************')
-			//console.log('Could not add ' + template_name + ' to ' + action.value.url)
+			console.log(req.err_msg)
 			console.log(err.message)
 			elapsed = ( Date.now() - start ) / 1000
 			console.log("seconds elapsed = " + elapsed)
@@ -238,6 +238,8 @@ function call_add_auths(reqs) {
 }
 
 var put_wh_cred_array = []
+var wh_cred_obj
+var wh_cred_req
 
 function add_template_to_webhooks() {
 
@@ -259,14 +261,20 @@ function add_template_to_webhooks() {
 					action_id = action.id
 					webhook_id = action.value.id
 
-					var put_wh_credentials = {
+					wh_cred_req = {
 						url: base_url + "/conditions/" + condition_id + "/actions/" + action_id + "/webhooks/" + webhook_id,
 						method:  "PUT",
 					   	headers: header,
 					   	body: '{ "auth": { "mode": "template", "template_name": "' + template_name + '", "type": "basic", "id": "' + auth_template_id + '"}}'
 					}
 
-					put_wh_cred_array.push(put_wh_credentials)
+					wh_cred_obj = {
+						opt: wh_cred_req,
+						err_msg: 'Could not add ' + template_name + ' to ' + action.value.url,
+						suc_msg: 'Added Auth to ' + action.value.http_type + ': ' + action.value.url
+					}
+
+					put_wh_cred_array.push(wh_cred_obj)
 				}
 			})
 		})

@@ -169,7 +169,7 @@ function call_add_auths(reqs) {
 		})
 	})
 	.then( function(val) {
-		console.log("Done " + val.length())
+		console.log("Done " + val.length)
 	})
 }
 

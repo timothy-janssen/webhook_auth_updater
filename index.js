@@ -44,7 +44,7 @@ function reset_vars() {
 	skip_existing_auth = undefined
 } 
 
-function add_auth_to_bot() {
+function add_auth_to_bot(res) {
 	get_templates = {
 		url:    base_url + "/webhook_templates",
 	   	method:  "GET",
@@ -60,7 +60,7 @@ function add_auth_to_bot() {
 				console.log('Existing template: ' + template_name)
 				auth_template_id = auth_template_data.id
 				console.log('Template id: ' + auth_template_id)
-				add_template_to_webhooks()
+				add_template_to_webhooks(res)
 			}
 		})
 
@@ -81,7 +81,7 @@ function add_auth_to_bot() {
 				auth_template_data = JSON.parse(data);
 				auth_template_id = auth_template_data.results.id
 				console.log('Template id: ' + auth_template_id)
-				add_template_to_webhooks()
+				add_template_to_webhooks(res)
 			}).catch(function (err) {
 				console.log('Template could not be created')
 				console.log(err.message)
@@ -94,7 +94,7 @@ var put_wh_cred_array = []
 var wh_cred_obj
 var wh_cred_req
 
-function add_template_to_webhooks() {
+function add_template_to_webhooks(res) {
 
 	get_conditions = {
 		url:    base_url + "/conditions",
@@ -134,7 +134,7 @@ function add_template_to_webhooks() {
 			})
 		})
 
-		call_add_auths(put_wh_cred_array)
+		call_add_auths(put_wh_cred_array, res)
 
 	}).catch(function (err) {
 		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)
@@ -142,7 +142,7 @@ function add_template_to_webhooks() {
 	})
 }
 
-function call_add_auths(reqs) {
+function call_add_auths(reqs, res) {
 	Promise.map(reqs, function(req) {
 		return rp.put(req.opt)
 		.then( function (val){
@@ -158,6 +158,7 @@ function call_add_auths(reqs) {
 		})
 	}, {concurrency: 5})
 	.then( function(val) {
+		res.send("Added authentication to " + val.length + " webhooks")
 		console.log("Done " + val.length)
 	})
 }
@@ -184,9 +185,9 @@ app.post('/add_auth', function (req, res) {
 		"Content-Type": "application/json"
 	}
     
-    add_auth_to_bot()
+    add_auth_to_bot(res)
     .then( function() {
-    	res.end(`Adding ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}`)
+    	res.write(`Adding ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}`)
     })
     .catch ( function (err) {
     	res.end(`There was an error with your request`)

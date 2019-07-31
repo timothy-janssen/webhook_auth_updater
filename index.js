@@ -167,7 +167,7 @@ function call_add_auths(reqs) {
 			console.log("seconds elapsed = " + elapsed)
 			console.log('*************************************')
 		})
-	
+	})
 	.then( function(val) {
 		console.log("Done " + val.length())
 	})

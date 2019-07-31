@@ -272,8 +272,7 @@ app.post('/add_auth_test', function (req, res) {
 	start = Date.now()
 	elapsed = 0 
 
-	request()
-	.promise()
+	Promise
 	.mapSeries(req_array, function(requ) {
 
 		console.log("here")

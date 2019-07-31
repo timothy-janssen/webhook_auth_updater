@@ -58,7 +58,7 @@ function add_auth_to_bot(res) {
 		webhook_data.results.auth.forEach( function(auth_template_data) {
 			if ( auth_template_data.template_name == template_name ) {
 				auth_template_id = auth_template_data.id
-				res.write(`Existing template: ${template_name}\n`)
+				res.write(`<p>Existing template: ${template_name}</p>`)
 				console.log('Existing template: ' + template_name)
 				console.log('Template id: ' + auth_template_id)
 				return add_template_to_webhooks(res)
@@ -80,12 +80,12 @@ function add_auth_to_bot(res) {
 			.then( function(data) {
 				auth_template_data = JSON.parse(data);
 				auth_template_id = auth_template_data.results.id
-				res.write(`Template created: ${template_name}\n`)
+				res.write(`<p>Template created: ${template_name}</p>`)
 				console.log('Template created: ' + template_name)
 				console.log('Template id: ' + auth_template_id)
 				return add_template_to_webhooks(res)
 			}).catch(function (err) {
-				res.write(`Template could not be created\n`)
+				res.write(`<p>Template could not be created</p>`)
 				res.end()
 				console.log('Template could not be created')
 				console.log(err.message)
@@ -165,7 +165,7 @@ function call_add_auths(reqs, res) {
 		})
 	}, {concurrency: 5})
 	.then( function(val) {
-		res.write(`Added authentication to ${suc_count} webhooks (with ${err_count} errors)`)
+		res.write(`<p>Added authentication to ${suc_count} webhooks (with ${err_count} errors)</p>`)
 		res.end()
 	})
 }
@@ -194,11 +194,12 @@ app.post('/add_auth', function (req, res) {
     
     add_auth_to_bot(res)
     .then( function() {
-    	res.write(`Adding ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}\n`)
+    	res.write(`<p>Adding ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}</p>`)
     })
     .catch ( function (err) {
     	res.write(`<p>There was an error with your request</p>`)
-    	res.write(`Check your token <a href="https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens">https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens</a> (if this link doesn't work, then check the Owner/Bot ID's)`)
+    	res.write(`<p>First, check your Owner/Bot/Version ID's</p>`)
+    	res.write(`<p>Then, check your token here: <a href="https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens">https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens</a></p>`)
     	res.end()
     	console.log(err.message)
     })

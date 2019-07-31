@@ -47,62 +47,8 @@ function reset_vars() {
 	username = undefined
 	password = undefined
 	skip_existing_auth = undefined
-}
+} 
 
-/*function add_template_to_webhooks() {
-
-	get_conditions = {
-		url:    base_url + "/conditions",
-	   	method:  "GET",
-	   	headers: header
-	}
-
-	return request.get(get_conditions)
-	.then( function(data) {
-		condition_data = JSON.parse(data)
-
-		condition_data.results.forEach( function(condition) {
-			condition_id = condition.id
-
-			condition.actions.forEach( async function(action) {
-				if(action.type == "http" && (!skip_existing_auth || !action.value.auth) ){
-					action_id = action.id
-					webhook_id = action.value.id
-
-					var put_wh_credentials = {
-						url: base_url + "/conditions/" + condition_id + "/actions/" + action_id + "/webhooks/" + webhook_id,
-						method:  "PUT",
-					   	headers: header,
-					   	body: '{ "auth": { "mode": "template", "template_name": "' + template_name + '", "type": "basic", "id": "' + auth_template_id + '"}}'
-					}
-
-					request.put(put_wh_credentials)
-					.then( function (val){
-						console.log('*************************************')
-						console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)							
-						elapsed = ( Date.now() - start ) / 1000
-						console.log("seconds elapsed = " + elapsed)
-						console.log('*************************************')
-					})
-					.catch(function (err) {
-						console.log('*************************************')
-						console.log('Could not add ' + template_name + ' to ' + action.value.url)
-						console.log(err.message)
-						elapsed = ( Date.now() - start ) / 1000
-						console.log("seconds elapsed = " + elapsed)
-						console.log('*************************************')
-					})
-				}
-			})
-		})
-	}).catch(function (err) {
-		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)
-		console.log(err.message)
-		elapsed = ( Date.now() - start ) / 1000
-		console.log("seconds elapsed = " + elapsed)
-	})
-}
-*/
 function add_auth_to_bot() {
 	get_templates = {
 		url:    base_url + "/webhook_templates",
@@ -118,6 +64,7 @@ function add_auth_to_bot() {
 			if ( auth_template_data.template_name == template_name ) {
 				console.log('Existing template: ' + template_name)
 				auth_template_id = auth_template_data.id
+				console.log('Template id: ' + auth_template_id)
 				add_template_to_webhooks()
 			}
 		})
@@ -144,10 +91,81 @@ function add_auth_to_bot() {
 				console.log('Template could not be created')
 				console.log(err.message)
 			})
-		} else {
-			console.log('Template id: ' + auth_template_id)
 		}
 	})	
+}
+
+var put_wh_cred_array = []
+var wh_cred_obj
+var wh_cred_req
+
+function add_template_to_webhooks() {
+
+	get_conditions = {
+		url:    base_url + "/conditions",
+	   	method:  "GET",
+	   	headers: header
+	}
+
+	request.get(get_conditions)
+	.then( function(data) {
+		condition_data = JSON.parse(data)
+
+		condition_data.results.forEach( function(condition) {
+			condition_id = condition.id
+
+			condition.actions.forEach( function(action) {
+				if (action.type == "http"){
+					action_id = action.id
+					webhook_id = action.value.id
+
+					wh_cred_req = {
+						url: base_url + "/conditions/" + condition_id + "/actions/" + action_id + "/webhooks/" + webhook_id,
+						method:  "PUT",
+					   	headers: header,
+					   	body: '{ "auth": { "mode": "template", "template_name": "' + template_name + '", "type": "basic", "id": "' + auth_template_id + '"}}'
+					}
+
+					wh_cred_obj = {
+						opt: wh_cred_req,
+						err_msg: 'Could not add ' + template_name + ' to ' + action.value.url,
+						suc_msg: 'Added Auth to ' + action.value.http_type + ': ' + action.value.url
+					}
+
+					put_wh_cred_array.push(wh_cred_obj)
+				}
+			})
+		})
+
+		call_add_auths(put_wh_cred_array)
+
+	}).catch(function (err) {
+		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)
+		console.log(err.message)
+	})
+}
+
+function call_add_auths(reqs) {
+	Promise.mapSeries(reqs, function(req) {
+		return rp.put(req.opt)
+		//.promise()
+		//.delay(1000)
+		.then( function (val){
+			console.log('*************************************')
+			console.log(req.suc_msg)							
+			elapsed = ( Date.now() - start ) / 1000
+			console.log("seconds elapsed = " + elapsed)
+			console.log('*************************************')
+		})
+		.catch(function (err) {
+			console.log('*************************************')
+			console.log(req.err_msg)
+			console.log(err.message)
+			elapsed = ( Date.now() - start ) / 1000
+			console.log("seconds elapsed = " + elapsed)
+			console.log('*************************************')
+		})
+	})
 }
 
 app.post('/add_auth', function (req, res) {
@@ -211,115 +229,5 @@ app.get('/', function (req, res) {
         </html>
     `);
 });
-
-function call_add_auths(reqs) {
-	Promise.mapSeries(reqs, function(req) {
-		return rp.put(req.opt)
-		.promise()
-		//.delay(1000)
-		.then( function (val){
-			console.log('*************************************')
-			console.log(req.suc_msg)							
-			elapsed = ( Date.now() - start ) / 1000
-			console.log("seconds elapsed = " + elapsed)
-			console.log('*************************************')
-		})
-		.catch(function (err) {
-			console.log('*************************************')
-			console.log(req.err_msg)
-			console.log(err.message)
-			elapsed = ( Date.now() - start ) / 1000
-			console.log("seconds elapsed = " + elapsed)
-			console.log('*************************************')
-		})
-	}).then( function(result){
-		console.log(result)
-	})
-}
-
-var put_wh_cred_array = []
-var wh_cred_obj
-var wh_cred_req
-
-function add_template_to_webhooks() {
-
-	get_conditions = {
-		url:    base_url + "/conditions",
-	   	method:  "GET",
-	   	headers: header
-	}
-
-	request.get(get_conditions)
-	.then( function(data) {
-		condition_data = JSON.parse(data)
-
-		condition_data.results.forEach( function(condition) {
-			condition_id = condition.id
-
-			condition.actions.forEach( function(action) {
-				if (action.type == "http"){
-					action_id = action.id
-					webhook_id = action.value.id
-
-					wh_cred_req = {
-						url: base_url + "/conditions/" + condition_id + "/actions/" + action_id + "/webhooks/" + webhook_id,
-						method:  "PUT",
-					   	headers: header,
-					   	body: '{ "auth": { "mode": "template", "template_name": "' + template_name + '", "type": "basic", "id": "' + auth_template_id + '"}}'
-					}
-
-					wh_cred_obj = {
-						opt: wh_cred_req,
-						err_msg: 'Could not add ' + template_name + ' to ' + action.value.url,
-						suc_msg: 'Added Auth to ' + action.value.http_type + ': ' + action.value.url
-					}
-
-					put_wh_cred_array.push(wh_cred_obj)
-				}
-			})
-		})
-
-		call_add_auths(put_wh_cred_array)
-
-	}).catch(function (err) {
-		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)
-		console.log(err.message)
-	})
-}
-
-app.post('/add_auth_test', function (req, res) {
-
-	header = {
-	   	"Authorization": "Token 06be8257dac67fabeac55b32497eb475",
-	   	"Accept": "application/json",
-		"Cache-Control": "no-cache",
-		"Connection": "keep-alive",
-		"Content-Type": "application/json"
-	}
-
-	get_templates = {
-		url:    "https://api.cai.tools.sap/build/v1/users/successfactors-sap/bots/digital-assistant-nate/versions/test-1/builder/webhook_templates",
-	   	method:  "GET",
-	   	headers: header
-	}
-
-	var req_array = [get_templates, get_templates, get_templates, get_templates]
-
-
-	start = Date.now()
-	elapsed = 0 
-
-	Promise.mapSeries(req_array, function(requ) {
-		return rp.get(requ)
-		.promise()
-		.delay(1000)
-		.then( function(data) {
-			elapsed = ( Date.now() - start ) / 1000
-			console.log("seconds elapsed = " + elapsed)
-		})
-	}).then( function(result){
-		console.log(result)
-	})
-})
 
 app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`));

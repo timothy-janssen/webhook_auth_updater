@@ -141,7 +141,7 @@ function add_template_to_webhooks(res) {
 		return call_add_auths(put_wh_cred_array, res)
 
 	}).catch(function (err) {
-		res.write(`Could not get the conditions from the bot ${user_id}/${bot_id}/${version_id}\n`)
+		res.write(`Could not get the conditions from the bot ${user_id}/${bot_id}/${version_id}`)
 		res.end()
 		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)
 		console.log(err.message)

@@ -60,7 +60,7 @@ function add_auth_to_bot(res) {
 				console.log('Existing template: ' + template_name)
 				auth_template_id = auth_template_data.id
 				console.log('Template id: ' + auth_template_id)
-				add_template_to_webhooks(res)
+				return add_template_to_webhooks(res)
 			}
 		})
 
@@ -75,13 +75,13 @@ function add_auth_to_bot(res) {
 			   	body: post_wh_auth_template_body 
 			}
 
-			rp.post(post_wh_auth_template)
+			return rp.post(post_wh_auth_template)
 			.then( function(data) {
 				console.log('Template created: ' + template_name)
 				auth_template_data = JSON.parse(data);
 				auth_template_id = auth_template_data.results.id
 				console.log('Template id: ' + auth_template_id)
-				add_template_to_webhooks(res)
+				return add_template_to_webhooks(res)
 			}).catch(function (err) {
 				console.log('Template could not be created')
 				console.log(err.message)
@@ -134,7 +134,7 @@ function add_template_to_webhooks(res) {
 			})
 		})
 
-		call_add_auths(put_wh_cred_array, res)
+		return call_add_auths(put_wh_cred_array, res)
 
 	}).catch(function (err) {
 		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)
@@ -143,7 +143,7 @@ function add_template_to_webhooks(res) {
 }
 
 function call_add_auths(reqs, res) {
-	Promise.map(reqs, function(req) {
+	return Promise.map(reqs, function(req) {
 		return rp.put(req.opt)
 		.then( function (val){
 			console.log(req.suc_msg)							
@@ -158,7 +158,8 @@ function call_add_auths(reqs, res) {
 		})
 	}, {concurrency: 5})
 	.then( function(val) {
-		res.send("Added authentication to " + val.length + " webhooks")
+		res.write("Added authentication to " + val.length + " webhooks")
+		res.end()
 		console.log("Done " + val.length)
 	})
 }

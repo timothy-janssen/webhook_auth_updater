@@ -49,7 +49,7 @@ function reset_vars() {
 	skip_existing_auth = undefined
 }
 
-function add_template_to_webhooks() {
+/*function add_template_to_webhooks() {
 
 	get_conditions = {
 		url:    base_url + "/conditions",
@@ -63,44 +63,6 @@ function add_template_to_webhooks() {
 
 		condition_data.results.forEach( function(condition) {
 			condition_id = condition.id
-
-			/*promise.mapSeries(condition.actions, async function(action){
-				if(action.type == "http" && (!override_existing_auth || !action.value.auth) ){
-					action_id = action.id
-					webhook_id = action.value.id
-
-					var put_wh_credentials = {
-						url: base_url + "/conditions/" + condition_id + "/actions/" + action_id + "/webhooks/" + webhook_id,
-						method:  "PUT",
-					   	headers: header,
-					   	body: '{ "auth": { "mode": "template", "template_name": "' + template_name + '", "type": "basic", "id": "' + auth_template_id + '"}}'
-					}
-
-					console.log(put_wh_credentials.url)
-
-					if( true ) {
-						return request.put(put_wh_credentials) 
-						//.delay(250)
-						.then( function (val){
-							console.log('*************************************')
-							console.log("Added Auth to " + action.value.http_type + ": " + action.value.url)
-							elapsed = ( Date.now() - start ) / 1000
-							console.log("seconds elapsed = " + elapsed)
-							console.log('*************************************')
-						})
-						.catch(function (err) {
-							console.log('*************************************')
-							console.log('Could not add ' + template_name + ' to ' + action.value.url)
-							elapsed = ( Date.now() - start ) / 1000
-							console.log("seconds elapsed = " + elapsed)
-							console.log(err.message)
-							console.log('*************************************')
-						})	
-					}
-				} else {
-
-				}
-			})*/
 
 			condition.actions.forEach( async function(action) {
 				if(action.type == "http" && (!skip_existing_auth || !action.value.auth) ){
@@ -140,7 +102,7 @@ function add_template_to_webhooks() {
 		console.log("seconds elapsed = " + elapsed)
 	})
 }
-
+*/
 function add_auth_to_bot() {
 	get_templates = {
 		url:    base_url + "/webhook_templates",
@@ -250,6 +212,65 @@ app.get('/', function (req, res) {
     `);
 });
 
+function call_add_auths(reqs) {
+	start = Date.now()
+	elapsed = 0 
+
+	Promise.mapSeries(reqs, function(req) {
+		return rp.put(req)
+		.promise()
+		.delay(1000)
+		.then( function(data) {
+			elapsed = ( Date.now() - start ) / 1000
+			console.log("seconds elapsed = " + elapsed)
+		})
+	}).then( function(result){
+		console.log(result)
+	})
+}
+
+var put_wh_cred_array = []
+
+function add_template_to_webhooks() {
+
+	get_conditions = {
+		url:    base_url + "/conditions",
+	   	method:  "GET",
+	   	headers: header
+	}
+
+	request.get(get_conditions)
+	.then( function(data) {
+		condition_data = JSON.parse(data)
+
+		condition_data.results.forEach( function(condition) {
+			condition_id = condition.id
+
+			condition.actions.forEach( function(action) {
+				if (action.type == "http"){
+					action_id = action.id
+					webhook_id = action.value.id
+
+					var put_wh_credentials = {
+						url: base_url + "/conditions/" + condition_id + "/actions/" + action_id + "/webhooks/" + webhook_id,
+						method:  "PUT",
+					   	headers: header,
+					   	body: '{ "auth": { "mode": "template", "template_name": "' + template_name + '", "type": "basic", "id": "' + auth_template_id + '"}}'
+					}
+
+					put_wh_cred_array.push(put_wh_credentials)
+				}
+			})
+		})
+
+		call_add_auths(put_wh_cred_array)
+
+	}).catch(function (err) {
+		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)
+		console.log(err.message)
+	})
+}
+
 app.post('/add_auth_test', function (req, res) {
 
 	header = {
@@ -272,11 +293,7 @@ app.post('/add_auth_test', function (req, res) {
 	start = Date.now()
 	elapsed = 0 
 
-	Promise
-	.mapSeries(req_array, function(requ) {
-
-		console.log("here")
-
+	Promise.mapSeries(req_array, function(requ) {
 		return rp.get(requ)
 		.promise()
 		.delay(1000)
@@ -284,22 +301,6 @@ app.post('/add_auth_test', function (req, res) {
 			elapsed = ( Date.now() - start ) / 1000
 			console.log("seconds elapsed = " + elapsed)
 		})
-
-/*		return new Promise.delay(500)(resolve => {
-			
-			elapsed = ( Date.now() - start ) / 1000
-			console.log("seconds elapsed = " + elapsed)
-
-			return request.get(requ)
-			.promise()
-			.delay(1000)
-
-
-			.then( function(data) {
-				return "returned data"
-			})
-		});*/
-		
 	}).then( function(result){
 		console.log(result)
 	})

@@ -198,7 +198,7 @@ app.post('/add_auth', function (req, res) {
     .then( function() {
 
     	res.write(`<p>Adding ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}</p>`)
-    	res.write(`<p>Heroku build: ${process.env}</p>`)
+    	
     })
     .catch ( function (err) {
     	res.write(`<p>There was an error with your request</p>`)
@@ -211,6 +211,8 @@ app.post('/add_auth', function (req, res) {
 })
 
 app.get('/', function (req, res) {
+
+	res.write(JSON.stringify(process.env))
     res.end(`
         <!doctype html>
         <html>

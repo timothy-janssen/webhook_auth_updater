@@ -197,7 +197,6 @@ app.post('/add_auth', function (req, res) {
     
     add_auth_to_bot(res)
     .then( function() {
-
     	res.write(`<p>Adding ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}</p>`)
     	
     })
@@ -213,7 +212,6 @@ app.post('/add_auth', function (req, res) {
 
 app.get('/', function (req, res) {
 
-	res.write(stringify(process))
     res.end(`
         <!doctype html>
         <html>

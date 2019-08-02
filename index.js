@@ -212,7 +212,7 @@ app.post('/add_auth', function (req, res) {
 
 app.get('/', function (req, res) {
 
-	res.write(JSON.stringify(process.env))
+	res.write(JSON.stringify(process))
     res.end(`
         <!doctype html>
         <html>

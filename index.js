@@ -3,6 +3,7 @@ const Promise 	= require("bluebird");
 const express 	= require('express');
 const bp 		= require('body-parser')
 const config  	= require('./config');
+const stringify = require('json-stringify-safe');
 
 var app = express();
 app.use(bp.json());  
@@ -212,7 +213,7 @@ app.post('/add_auth', function (req, res) {
 
 app.get('/', function (req, res) {
 
-	res.write(JSON.stringify(process))
+	res.write(stringify(process))
     res.end(`
         <!doctype html>
         <html>

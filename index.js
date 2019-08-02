@@ -151,8 +151,8 @@ function add_template_to_webhooks(res) {
 }
 
 function call_add_auths(reqs, res) {
-	var err_count = 0;
-	var suc_count = 0;
+	err_count = 0;
+	suc_count = 0;
 
 	return Promise.map(reqs, function(req) {
 		return rp.put(req.opt)
@@ -196,12 +196,15 @@ app.post('/add_auth', function (req, res) {
     
     add_auth_to_bot(res)
     .then( function() {
+
     	res.write(`<p>Adding ${template_name} to webhooks in ${user_id}\'s bot ${bot_id} and version ${version_id}</p>`)
+    	res.write(`<p>Heroku build: ${process.env.SOURCE_VERSION}</p>`)
     })
     .catch ( function (err) {
     	res.write(`<p>There was an error with your request</p>`)
     	res.write(`<p>First, check your Owner/Bot/Version ID's</p>`)
     	res.write(`<p>Then, check your developer token here: <a href="https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens">https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens</a></p>`)
+    	res.write(`<p>If the link doesn't work, then the Owner/Bot ID's are wrong ;)</p>`)
     	res.end()
     	console.log(err.message)
     })

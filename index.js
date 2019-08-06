@@ -326,9 +326,27 @@ function get_count(obj, str) {
 			console.log(elem)
 			console.log('************************')
 
-			// Check if the value of this object matches 
+			// Requirement
 			if (elem.value && typeof elem.value === 'string' && elem.value.includes(str)) {
 				num++
+			}
+
+			// Set memory variable
+			if (elem.type === 'edit_memory' && elem.value && typeof elem.value.set === 'array') {
+				elem.value.set.forEach(function(item) {
+					if ( item.value.includes(str) ) {
+						num++
+					}
+				})
+			}
+
+			// Messages
+			if (elem.type === 'message' && elem.value && elem.value.en && typeof elem.value.en === 'array') {
+				elem.value.en.forEach(function(item) {
+					if ( item.value.includes(str) ) {
+						num++
+					}
+				})
 			}
 
 			// Check if the data of this object matches (entity matching)
@@ -348,9 +366,20 @@ function get_count(obj, str) {
 				num += get_count(elem.left, str)
 			}
 
-
 			if (elem.right && elem.right.length > 0) {
 				num += get_count(elem.right, str)
+			}
+
+			if (elem.on_empty_condition ) {
+				num += get_count(elem.left, str)
+			}
+
+			if (elem.on_validation_condition ) {
+				num += get_count(elem.left, str)
+			}
+
+			if (elem.on_success_condition ) {
+				num += get_count(elem.left, str)
 			}
 
 		})

@@ -233,6 +233,7 @@ app.get('/', function (req, res) {
     `);
 });
 
+var where_used_return_string
 
 app.get('/where_used', function (req, res) {
 
@@ -279,7 +280,10 @@ app.get('/where_used', function (req, res) {
 					data = JSON.parse(data)
 					tasks = data.results.children
 					num = get_count(tasks, 'money')
-					console.log(num + ' occurances of ' + 'money' + ' in ' + skill_name + ' requirements')
+					
+					if ( num > 0 ) {
+						where_used_return_string += '' +  num + ' occurances of ' + 'money' + ' in ' + skill_name + ' requirements'
+					}
 				} else {
 					console.log('No requirements for ' + skill_name)
 				}
@@ -296,7 +300,10 @@ app.get('/where_used', function (req, res) {
 						data = JSON.parse(data)
 						triggers = data.results.children
 						num = get_count(triggers, 'test')
-						console.log(num + ' occurances of ' + 'test' + ' in ' + skill_name + ' trigger')
+
+						if ( num > 0 ) {
+							where_used_return_string += '' +  num + ' occurances of ' + 'test' + ' in ' + skill_name + ' trigger'
+						}
 					} else {
 						console.log('No trigger for ' + skill_name)
 					}
@@ -305,7 +312,7 @@ app.get('/where_used', function (req, res) {
 
 		}, {concurrency: 1})
 
-		res.send()
+		res.send(where_used_return_string)
 	})
 });
 

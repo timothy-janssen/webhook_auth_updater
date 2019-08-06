@@ -284,7 +284,7 @@ app.get('/where_used', function (req, res) {
 					num = get_count(tasks, search_str)
 
 					if ( num > 0 ) {
-						res.write(`${num} occurances of ${search_str} in ${skill_name} requirements`)
+						res.write(`${num} occurances of ${search_str} in ${skill_name} requirements\n`)
 					}
 				}
 	
@@ -303,7 +303,7 @@ app.get('/where_used', function (req, res) {
 						num = get_count(triggers, search_str)
 
 						if ( num > 0 ) {
-							res.write(`${num} occurances of ${search_str} in ${skill_name} trigger`)
+							res.write(`${num} occurances of ${search_str} in ${skill_name} trigger\n`)
 						}
 					}
 				})

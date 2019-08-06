@@ -267,7 +267,7 @@ app.get('/where_used', function (req, res) {
 
 			console.log("Skill: " + skill_name)
 
-			get_sikll_tasks = {
+			get_skill_tasks = {
 				url:    base_url + "/skills/" + skill_name + "/task",
 			   	method:  "GET",
 			   	headers: header

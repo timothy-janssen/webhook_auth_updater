@@ -271,6 +271,8 @@ app.get('/where_used', function (req, res) {
 			   	headers: header
 			}
 
+			console.log(get_skill_triggers)
+			
 			rp.get(get_skill_triggers)
 			.then( function(data){
 				console.log(data)

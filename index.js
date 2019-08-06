@@ -233,4 +233,99 @@ app.get('/', function (req, res) {
     `);
 });
 
+
+app.get('/where_used', function (req, res) {
+
+	user_id = 'timoteo'
+	bot_id = 'cool-kids'
+	version_id = 'v1'
+	dev_token = 'ffbb04088c3e27ecdbcb38623d589c31'
+
+	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
+
+	header = {
+	   	"Authorization": "Token " + dev_token,
+	   	"Accept": "application/json",
+		"Cache-Control": "no-cache",
+		"Connection": "keep-alive",
+		"Content-Type": "application/json"
+	}
+
+	get_skills = {
+		url:    base_url + "/skills",
+	   	method:  "GET",
+	   	headers: header
+	}
+
+	rp.get(get_skills)
+	.then( function(data) {
+
+		skills = JSON.parse(data).results
+
+		Promise.map(skills, function(skill) {
+			skill_name = skill.name
+
+			get_skill_triggers = {
+				url:    base_url + "/skills/" + skill_name + "/trigger",
+			   	method:  "GET",
+			   	headers: header
+			}
+
+			rp.get(get_skill_triggers)
+			.then( function(data){
+				triggers = JSON.parse(data).results.children
+
+				num = get_count(triggers, 'test')
+
+				console.log(num ' occurances of ' + 'test' + ' in ' + skill_name ' trigger')
+			})
+
+			get_skill_tasks = {
+				url:    base_url + "/skills/" + skill_name + "/task",
+			   	method:  "GET",
+			   	headers: header
+			}
+
+			rp.get(get_skill_tasks)
+			.then( function(data){
+				tasks = JSON.parse(data).results.children
+
+				num = get_count(tasks, 'money')
+
+				console.log(num ' occurances of ' + 'money' + ' in ' + skill_name ' requirements')
+			})
+
+		}, {concurrency: 1})
+
+	})
+
+
+});
+
+
+function get_count(obj, str) {
+	var num = 0;
+	if (obj == null || typeof obj == 'undefined') {
+		return 0
+	} else {
+		obj.forEach( function(elem) {
+
+			if (elem.value && typeof elem.value === 'string' && elem.value.includes(str)) {
+				num++
+			}
+
+			if (elem.children.length > 0) {
+				num += get_count(elem.children, str)
+			}
+
+			if (elem.actions.length > 0) {
+				num += get_count(elem.actions, str)
+			}
+		})
+
+		return num
+	}
+
+}
+
 app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`));

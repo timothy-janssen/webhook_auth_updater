@@ -273,6 +273,8 @@ app.get('/where_used', function (req, res) {
 			   	headers: header
 			}
 
+			console.log("URL: " + get_skill_tasks.url) 
+
 			return rp.get(get_skill_tasks)
 			.then( function(data){
 				if(data && data.results) {
@@ -284,8 +286,6 @@ app.get('/where_used', function (req, res) {
 				} else {
 					console.log('No requirements for ' + skill_name)
 				}
-
-
 	
 				get_skill_triggers = {
 					url:    base_url + "/skills/" + skill_name + "/trigger",

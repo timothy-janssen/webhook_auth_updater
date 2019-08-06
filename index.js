@@ -279,15 +279,13 @@ app.get('/where_used', function (req, res) {
 			return rp.get(get_skill_tasks)
 			.then( function(data){
 				if(data) {
-					data = JSON.parse(data)
-					tasks = data.results.children
-					num = get_count(tasks, 'money')
+					tasks = JSON.parse(data).results.children
+					search_str = 'money'
+					num = get_count(tasks, search_str)
 
 					if ( num > 0 ) {
-						where_used_return_string += '' +  num + ' occurances of ' + 'money' + ' in ' + skill_name + ' requirements\n'
+						res.write(`${num} occurances of ${search_str} in ${skill_name} requirements`)
 					}
-				} else {
-					console.log('No requirements for ' + skill_name)
 				}
 	
 				get_skill_triggers = {
@@ -301,20 +299,18 @@ app.get('/where_used', function (req, res) {
 					if(data) {
 						data = JSON.parse(data)
 						triggers = data.results.children
-						num = get_count(triggers, 'test')
+						search_str = 'test'
+						num = get_count(triggers, search_str)
 
 						if ( num > 0 ) {
-							where_used_return_string += '' +  num + ' occurances of ' + 'test' + ' in ' + skill_name + ' trigger\n'
+							res.write(`${num} occurances of ${search_str} in ${skill_name} trigger`)
 						}
-					} else {
-						console.log('No trigger for ' + skill_name)
 					}
-				})
 			})
 
 		}, {concurrency: 1})
 		.then( function() {
-			res.send(where_used_return_string)
+			res.end()
 		})
 	})
 });

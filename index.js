@@ -273,6 +273,7 @@ app.get('/where_used', function (req, res) {
 
 			rp.get(get_skill_triggers)
 			.then( function(data){
+				console.log(data)
 				data = JSON.parse(data)
 				if(data && data.results) {
 					triggers = data.results.children
@@ -291,6 +292,7 @@ app.get('/where_used', function (req, res) {
 
 			return rp.get(get_skill_tasks)
 			.then( function(data){
+				console.log(data)
 				data = JSON.parse(data)
 				if(data && data.results) {
 					tasks = data.results.children

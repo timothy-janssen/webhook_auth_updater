@@ -273,12 +273,14 @@ app.get('/where_used', function (req, res) {
 
 			rp.get(get_skill_triggers)
 			.then( function(data){
-				data = JSON.parse(data)
-				triggers = data.results.children
-
-				num = get_count(triggers, 'test')
-
-				console.log(num + ' occurances of ' + 'test' + ' in ' + skill_name + ' trigger')
+				if(data && data.results) {
+					data = JSON.parse(data)
+					triggers = data.results.children
+					num = get_count(triggers, 'test')
+					console.log(num + ' occurances of ' + 'test' + ' in ' + skill_name + ' trigger')
+				} else {
+					console.log('No trigger for ' + skill_name)
+				}
 			})
 
 			get_skill_tasks = {
@@ -289,12 +291,14 @@ app.get('/where_used', function (req, res) {
 
 			return rp.get(get_skill_tasks)
 			.then( function(data){
-				data = JSON.parse(data)
-				tasks = data.results.children
-
-				num = get_count(tasks, 'money')
-
-				console.log(num + ' occurances of ' + 'money' + ' in ' + skill_name + ' requirements')
+				if(data && data.results) {
+					data = JSON.parse(data)
+					tasks = data.results.children
+					num = get_count(tasks, 'money')
+					console.log(num + ' occurances of ' + 'money' + ' in ' + skill_name + ' requirements')
+				} else {
+					console.log('No trigger for ' + skill_name)
+				}
 			})
 
 		}, {concurrency: 1}) 

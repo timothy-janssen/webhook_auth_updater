@@ -372,15 +372,15 @@ function get_count(obj, str) {
 			}
 
 			if (elem.on_empty_condition ) {
-				num += get_count(elem.on_empty_condition, str)
+				num += get_count([elem.on_empty_condition], str)
 			}
 
 			if (elem.on_validation_condition ) {
-				num += get_count(elem.on_validation_condition, str)
+				num += get_count([elem.on_validation_condition], str)
 			}
 
 			if (elem.on_success_condition ) {
-				num += get_count(elem.on_success_condition, str)
+				num += get_count([elem.on_success_condition], str)
 			}
 
 		})

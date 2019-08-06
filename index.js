@@ -272,12 +272,11 @@ app.get('/where_used', function (req, res) {
 			}
 
 			console.log(get_skill_triggers)
-			
+
 			rp.get(get_skill_triggers)
-			.then( function(data){
-				console.log(data)
-				data = JSON.parse(data)
+			.then( function(data){				
 				if(data && data.results) {
+					data = JSON.parse(data)
 					triggers = data.results.children
 					num = get_count(triggers, 'test')
 					console.log(num + ' occurances of ' + 'test' + ' in ' + skill_name + ' trigger')
@@ -294,9 +293,8 @@ app.get('/where_used', function (req, res) {
 
 			return rp.get(get_skill_tasks)
 			.then( function(data){
-				console.log(data)
-				data = JSON.parse(data)
 				if(data && data.results) {
+					data = JSON.parse(data)
 					tasks = data.results.children
 					num = get_count(tasks, 'money')
 					console.log(num + ' occurances of ' + 'money' + ' in ' + skill_name + ' requirements')

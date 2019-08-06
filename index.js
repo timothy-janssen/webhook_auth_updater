@@ -277,7 +277,7 @@ app.get('/where_used', function (req, res) {
 
 			return rp.get(get_skill_tasks)
 			.then( function(data){
-				if(data && data.results) {
+				if(data) {
 					console.log('HERE')
 					data = JSON.parse(data)
 					tasks = data.results.children
@@ -295,7 +295,7 @@ app.get('/where_used', function (req, res) {
 	
 				return rp.get(get_skill_triggers)
 				.then( function(data){				
-					if(data && data.results) {
+					if(data) {
 						data = JSON.parse(data)
 						triggers = data.results.children
 						num = get_count(triggers, 'test')

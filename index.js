@@ -244,7 +244,7 @@ app.get('/where_used', function (req, res) {
 	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
 
 	header = {
-	   	"Authorization": "Token " + dev_token,
+	//   	"Authorization": "Token " + dev_token,
 	   	"Accept": "application/json",
 		"Cache-Control": "no-cache",
 		"Connection": "keep-alive",
@@ -267,7 +267,7 @@ app.get('/where_used', function (req, res) {
 
 			console.log("Skill: " + skill_name)
 
-			get_skill_tasks = {
+			get_sikll_tasks = {
 				url:    base_url + "/skills/" + skill_name + "/task",
 			   	method:  "GET",
 			   	headers: header

@@ -327,60 +327,80 @@ function get_count(obj, str) {
 			console.log(elem)
 			console.log('************************')
 
-			// Requirement
+			// Trigger conditions
 			if (elem.value && typeof elem.value === 'string' && elem.value.includes(str)) {
 				num++
+				console.log("// Trigger conditions")
 			}
 
-			// Set memory variable
+			// Set as memory variable
 			if (elem.type === 'edit_memory' && elem.value && typeof elem.value.set === 'array') {
 				elem.value.set.forEach(function(item) {
 					if ( item.value.includes(str) ) {
 						num++
+						console.log("// Set as memory variable")
 					}
 				})
 			}
 
-			// Messages
+			// Part of Message to user
 			if (elem.type === 'message' && elem.value && elem.value.en && typeof elem.value.en === 'array') {
 				elem.value.en.forEach(function(item) {
 					if ( item.value.includes(str) ) {
 						num++
+						console.log("// Part of Message to user")
 					}
 				})
 			}
 
-			// Check if the data of this object matches (entity matching)
+			// as Requirement
 			if (elem.data && typeof elem.data.name === 'string' && elem.data.name.includes(str)) {
 				num++
 			}
 
+			// Check the element's children
 			if (elem.children && elem.children.length > 0) {
 				num += get_count(elem.children, str)
 			}
 
+			// Check the element's actions
 			if (elem.actions && elem.actions.length > 0) {
 				num += get_count(elem.actions, str)
 			}
 
+			// Left side of conditional
 			if (elem.left && elem.left.length > 0) {
-				num += get_count(elem.left, str)
+				i = 0
+				i += get_count(elem.left, str)
+				if (i > 0) {num += i; console.log("// Left side of conditional")}
 			}
 
+			// Right side of conditional
 			if (elem.right && elem.right.length > 0) {
-				num += get_count(elem.right, str)
+				i = 0
+				i += get_count(elem.right, str)
+				if (i > 0) {num += i; console.log("// Right side of conditional")}
 			}
 
+			// "If #entity is missing"
 			if (elem.on_empty_condition ) {
-				num += get_count([elem.on_empty_condition], str)
+				i = 0
+				i += get_count([elem.on_empty_condition], str)
+				if (i > 0) {num += i; console.log("// If #entity is missing")}
 			}
 
+			// Validators
 			if (elem.on_validation_condition ) {
-				num += get_count([elem.on_validation_condition], str)
+				i = 0
+				i += get_count([elem.on_validation_condition], str)
+				if (i > 0) {num += i; console.log("// Validators")}
 			}
-
+			
+			// "If #entity is complete"
 			if (elem.on_success_condition ) {
-				num += get_count([elem.on_success_condition], str)
+				i = 0
+				i += get_count([elem.on_success_condition], str)
+				if (i > 0) {num += i; console.log("// If #entity is complete")}
 			}
 
 		})

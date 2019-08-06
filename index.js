@@ -322,11 +322,11 @@ function get_count(obj, str) {
 				num++
 			}
 
-			if (elem.children.length > 0) {
+			if (elem.children && elem.children.length > 0) {
 				num += get_count(elem.children, str)
 			}
 
-			if (elem.actions.length > 0) {
+			if (elem.actions && elem.actions.length > 0) {
 				num += get_count(elem.actions, str)
 			}
 		})

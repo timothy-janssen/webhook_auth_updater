@@ -233,9 +233,11 @@ app.get('/', function (req, res) {
     `);
 });
 
-var where_used_return_string
+
 
 app.get('/where_used', function (req, res) {
+
+	var where_used_return_string = ''
 
 	user_id = 'timoteo'
 	bot_id = 'cool-kids'
@@ -282,7 +284,7 @@ app.get('/where_used', function (req, res) {
 					num = get_count(tasks, 'money')
 
 					if ( num > 0 ) {
-						where_used_return_string += '' +  num + ' occurances of ' + 'money' + ' in ' + skill_name + ' requirements'
+						where_used_return_string += '' +  num + ' occurances of ' + 'money' + ' in ' + skill_name + ' requirements\n'
 					}
 				} else {
 					console.log('No requirements for ' + skill_name)
@@ -302,7 +304,7 @@ app.get('/where_used', function (req, res) {
 						num = get_count(triggers, 'test')
 
 						if ( num > 0 ) {
-							where_used_return_string += '' +  num + ' occurances of ' + 'test' + ' in ' + skill_name + ' trigger'
+							where_used_return_string += '' +  num + ' occurances of ' + 'test' + ' in ' + skill_name + ' trigger\n'
 						}
 					} else {
 						console.log('No trigger for ' + skill_name)

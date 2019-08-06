@@ -295,7 +295,7 @@ app.get('/where_used', function (req, res) {
 				console.log(num ' occurances of ' + 'money' + ' in ' + skill_name ' requirements')
 			})
 
-		}, {concurrency: 1})
+		}, {concurrency: 1}) 
 
 	})
 

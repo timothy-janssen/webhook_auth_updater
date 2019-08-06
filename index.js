@@ -277,7 +277,7 @@ app.get('/where_used', function (req, res) {
 
 				num = get_count(triggers, 'test')
 
-				console.log(num ' occurances of ' + 'test' + ' in ' + skill_name ' trigger')
+				console.log(num + ' occurances of ' + 'test' + ' in ' + skill_name + ' trigger')
 			})
 
 			get_skill_tasks = {
@@ -292,7 +292,7 @@ app.get('/where_used', function (req, res) {
 
 				num = get_count(tasks, 'money')
 
-				console.log(num ' occurances of ' + 'money' + ' in ' + skill_name ' requirements')
+				console.log(num + ' occurances of ' + 'money' + ' in ' + skill_name + ' requirements')
 			})
 
 		}, {concurrency: 1}) 
@@ -322,7 +322,6 @@ function get_count(obj, str) {
 
 		return num
 	}
-
 }
 
 app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`));

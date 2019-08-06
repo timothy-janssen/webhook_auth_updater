@@ -306,8 +306,8 @@ app.get('/where_used', function (req, res) {
 							res.write(`${num} occurances of ${search_str} in ${skill_name} trigger`)
 						}
 					}
+				})
 			})
-
 		}, {concurrency: 1})
 		.then( function() {
 			res.end()

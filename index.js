@@ -270,9 +270,7 @@ app.get('/where_used', function (req, res) {
 			   	method:  "GET",
 			   	headers: header
 			}
-
-			console.log(get_skill_triggers)
-
+			
 			rp.get(get_skill_triggers)
 			.then( function(data){				
 				if(data && data.results) {

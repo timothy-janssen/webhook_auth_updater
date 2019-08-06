@@ -280,7 +280,7 @@ app.get('/where_used', function (req, res) {
 					data = JSON.parse(data)
 					tasks = data.results.children
 					num = get_count(tasks, 'money')
-					
+
 					if ( num > 0 ) {
 						where_used_return_string += '' +  num + ' occurances of ' + 'money' + ' in ' + skill_name + ' requirements'
 					}
@@ -311,8 +311,9 @@ app.get('/where_used', function (req, res) {
 			})
 
 		}, {concurrency: 1})
-
-		res.send(where_used_return_string)
+		.then( function() {
+			res.send(where_used_return_string)
+		})
 	})
 });
 

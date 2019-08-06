@@ -276,7 +276,6 @@ app.get('/where_used', function (req, res) {
 			return rp.get(get_skill_tasks)
 			.then( function(data){
 				if(data) {
-					console.log('HERE')
 					data = JSON.parse(data)
 					tasks = data.results.children
 					num = get_count(tasks, 'money')
@@ -321,7 +320,13 @@ function get_count(obj, str) {
 			console.log(elem)
 			console.log('************************')
 
+			// Check if the value of this object matches 
 			if (elem.value && typeof elem.value === 'string' && elem.value.includes(str)) {
+				num++
+			}
+
+			// Check if the data of this object matches (entity matching)
+			if (elem.data && typeof elem.data.name === 'string' && elem.data.name.includes(str)) {
 				num++
 			}
 
@@ -332,6 +337,16 @@ function get_count(obj, str) {
 			if (elem.actions && elem.actions.length > 0) {
 				num += get_count(elem.actions, str)
 			}
+
+			if (elem.left && elem.left.length > 0) {
+				num += get_count(elem.left, str)
+			}
+
+
+			if (elem.right && elem.right.length > 0) {
+				num += get_count(elem.right, str)
+			}
+
 		})
 
 		return num

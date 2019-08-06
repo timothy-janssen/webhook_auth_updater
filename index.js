@@ -271,9 +271,7 @@ app.get('/where_used', function (req, res) {
 				url:    base_url + "/skills/" + skill_name + "/task",
 			   	method:  "GET",
 			   	headers: header
-			}
-
-			console.log("URL: " + get_skill_tasks.url) 
+			} 
 
 			return rp.get(get_skill_tasks)
 			.then( function(data){
@@ -306,7 +304,9 @@ app.get('/where_used', function (req, res) {
 				})
 			})
 
-		}, {concurrency: 1}) 
+		}, {concurrency: 1})
+
+		res.send()
 	})
 });
 
@@ -317,6 +317,9 @@ function get_count(obj, str) {
 		return 0
 	} else {
 		obj.forEach( function(elem) {
+			console.log('************************')
+			console.log(elem)
+			console.log('************************')
 
 			if (elem.value && typeof elem.value === 'string' && elem.value.includes(str)) {
 				num++

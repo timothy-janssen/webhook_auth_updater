@@ -292,7 +292,7 @@ app.get('/where_used', function (req, res) {
 			return rp.get(get_skill_tasks)
 			.then( function(data){
 				data = JSON.parse(data)
-				if(data && data.results) {\
+				if(data && data.results) {
 					tasks = data.results.children
 					num = get_count(tasks, 'money')
 					console.log(num + ' occurances of ' + 'money' + ' in ' + skill_name + ' requirements')

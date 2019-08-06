@@ -244,10 +244,12 @@ app.get('/where_used', function (req, res) {
 	version_id = 'v1'
 	dev_token = 'ffbb04088c3e27ecdbcb38623d589c31'
 
+	search_str = 'money'
+
 	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
 
 	header = {
-	//   	"Authorization": "Token " + dev_token,
+	   	"Authorization": "Token " + dev_token,
 	   	"Accept": "application/json",
 		"Cache-Control": "no-cache",
 		"Connection": "keep-alive",
@@ -299,7 +301,6 @@ app.get('/where_used', function (req, res) {
 					if(data) {
 						data = JSON.parse(data)
 						triggers = data.results.children
-						search_str = 'test'
 						num = get_count(triggers, search_str)
 
 						if ( num > 0 ) {

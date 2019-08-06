@@ -286,7 +286,7 @@ app.get('/where_used', function (req, res) {
 			   	headers: header
 			}
 
-			rp.get(get_skill_tasks)
+			return rp.get(get_skill_tasks)
 			.then( function(data){
 				tasks = JSON.parse(data).results.children
 
@@ -296,10 +296,7 @@ app.get('/where_used', function (req, res) {
 			})
 
 		}, {concurrency: 1}) 
-
 	})
-
-
 });
 
 

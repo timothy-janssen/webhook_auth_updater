@@ -265,23 +265,7 @@ app.get('/where_used', function (req, res) {
 		Promise.map(skills, function(skill) {
 			skill_name = skill.name
 
-			get_skill_triggers = {
-				url:    base_url + "/skills/" + skill_name + "/trigger",
-			   	method:  "GET",
-			   	headers: header
-			}
-			
-			rp.get(get_skill_triggers)
-			.then( function(data){				
-				if(data && data.results) {
-					data = JSON.parse(data)
-					triggers = data.results.children
-					num = get_count(triggers, 'test')
-					console.log(num + ' occurances of ' + 'test' + ' in ' + skill_name + ' trigger')
-				} else {
-					console.log('No trigger for ' + skill_name)
-				}
-			})
+			console.log("Skill: " + skill_name)
 
 			get_skill_tasks = {
 				url:    base_url + "/skills/" + skill_name + "/task",
@@ -292,6 +276,7 @@ app.get('/where_used', function (req, res) {
 			return rp.get(get_skill_tasks)
 			.then( function(data){
 				if(data && data.results) {
+					console.log('HERE')
 					data = JSON.parse(data)
 					tasks = data.results.children
 					num = get_count(tasks, 'money')
@@ -299,6 +284,26 @@ app.get('/where_used', function (req, res) {
 				} else {
 					console.log('No requirements for ' + skill_name)
 				}
+
+
+	
+				get_skill_triggers = {
+					url:    base_url + "/skills/" + skill_name + "/trigger",
+				   	method:  "GET",
+				   	headers: header
+				}
+	
+				return rp.get(get_skill_triggers)
+				.then( function(data){				
+					if(data && data.results) {
+						data = JSON.parse(data)
+						triggers = data.results.children
+						num = get_count(triggers, 'test')
+						console.log(num + ' occurances of ' + 'test' + ' in ' + skill_name + ' trigger')
+					} else {
+						console.log('No trigger for ' + skill_name)
+					}
+				})
 			})
 
 		}, {concurrency: 1}) 

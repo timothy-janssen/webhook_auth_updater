@@ -327,14 +327,14 @@ function get_count(obj, str) {
 			console.log(elem)
 			console.log('************************')
 
-			// Trigger conditions
+			// As part of condition
 			if (elem.value && typeof elem.value === 'string' && elem.value.includes(str)) {
 				num++
-				console.log("// Trigger conditions")
+				console.log("// As part of condition")
 			}
 
 			// Set as memory variable
-			if (elem.type === 'edit_memory' && elem.value && typeof elem.value.set === 'array') {
+			if (elem.type == 'edit_memory' && elem.value && typeof elem.value.set == 'array') {
 				elem.value.set.forEach(function(item) {
 					if ( item.value.includes(str) ) {
 						num++
@@ -344,7 +344,7 @@ function get_count(obj, str) {
 			}
 
 			// Part of Message to user
-			if (elem.type === 'message' && elem.value && elem.value.en ){//} && typeof elem.value.en === 'array') {
+			if (elem.type == 'message' && elem.value && elem.value.en ){//} && typeof elem.value.en === 'array') {
 				console.log("checking array")
 				elem.value.en.forEach(function(item) {
 					console.log("message: " + item.value)

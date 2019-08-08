@@ -344,7 +344,7 @@ function get_count(obj, str) {
 			}
 
 			// Part of Message to user
-			if (elem.type === 'message' && elem.value && elem.value.en && typeof elem.value.en === 'array') {
+			if (elem.type === 'message' && elem.value && elem.value.en ){//} && typeof elem.value.en === 'array') {
 				console.log("checking array")
 				elem.value.en.forEach(function(item) {
 					console.log("message: " + item.value)

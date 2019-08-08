@@ -307,6 +307,26 @@ app.get('/where_used', function (req, res) {
 							res.write(`${num} occurances of ${search_str} in ${skill_name} trigger\n`)
 						}
 					}
+
+					get_skill_actions = {
+						url:    base_url + "/skills/" + skill_name + "/results",
+				   		method:  "GET",
+				   		headers: header
+					}
+
+					console.log("ACTIONS:")
+					return rp.get(get_skill_actions)
+					.then( function(data){				
+						if(data) {
+							data = JSON.parse(data)
+							actions = data.results.children
+							num = get_count(actions, search_str)
+	
+							if ( num > 0 ) {
+								res.write(`${num} occurances of ${search_str} in ${skill_name} actions\n`)
+							}
+						}
+					})
 				})
 			})
 		}, {concurrency: 1})

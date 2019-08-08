@@ -277,7 +277,7 @@ app.get('/where_used', function (req, res) {
 			   	method:  "GET",
 			   	headers: header
 			} 
-
+			console.log("TASKS:")
 			return rp.get(get_skill_tasks)
 			.then( function(data){
 				if(data) {
@@ -295,7 +295,7 @@ app.get('/where_used', function (req, res) {
 				   	method:  "GET",
 				   	headers: header
 				}
-	
+				console.log("TRIGGERS:")
 				return rp.get(get_skill_triggers)
 				.then( function(data){				
 					if(data) {
@@ -345,7 +345,9 @@ function get_count(obj, str) {
 
 			// Part of Message to user
 			if (elem.type === 'message' && elem.value && elem.value.en && typeof elem.value.en === 'array') {
+				console.log("checking array")
 				elem.value.en.forEach(function(item) {
+					console.log("message: " + item.value)
 					if ( item.value.includes(str) ) {
 						num++
 						console.log("// Part of Message to user")

@@ -343,7 +343,7 @@ function get_count(obj, str) {
 				})
 			}
 
-			if (elem.value.en) {console.log('' + typeof elem.value.en)}
+			if (elem.value && elem.value.en) {console.log('' + typeof elem.value.en)}
 			// Part of Message to user
 			if (elem.type == 'message' && elem.value && elem.value.en && typeof elem.value.en == 'array') {
 				console.log("checking array")

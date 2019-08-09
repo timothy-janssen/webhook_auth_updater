@@ -351,7 +351,7 @@ app.post('/where_used', function (req, res) {
 							}
 						}
 						if (skill_str_to_user.length > skill_str_to_user_check.length) {
-							res.write(skill_str_to_user)
+							res.write(`<p>${skill_str_to_user}</p>`)
 						}
 					})
 					.catch( function(err) {

@@ -268,7 +268,7 @@ app.get('/where_used', function (req, res) {
 		skills = JSON.parse(data).results
 
 		Promise.map(skills, function(skill) {
-			skill_name = skill.name
+			var skill_name = skill.name
 
 			console.log("Skill: " + skill_name)
 
@@ -338,7 +338,7 @@ app.get('/where_used', function (req, res) {
 			.catch( function(err) {
 				console.log(err.message)
 			})
-		}, {concurrency: 1})
+		}, {concurrency: 10})
 		.then( function() {
 			res.end()
 		})
@@ -352,14 +352,14 @@ function get_count(obj, str) {
 		return 0
 	} else {
 		obj.forEach( function(elem) {
-			console.log('************************')
+			/*console.log('************************')
 			console.log(elem)
-			console.log('************************')
+			console.log('************************')*/
 
 			// As part of condition
 			if (elem.value && typeof elem.value === 'string' && elem.value.includes(str)) {
 				num++
-				console.log("// As part of condition")
+				//console.log("// As part of condition")
 			}
 
 			// Set as memory variable
@@ -369,7 +369,7 @@ function get_count(obj, str) {
 					// Set variable to string
 					if ( item.value && typeof item.value == 'string' && item.value.includes(str) ) {
 						num++
-						console.log("// Set as memory variable")
+						//console.log("// Set as memory variable")
 					}
 
 					// Set variable to object
@@ -378,10 +378,10 @@ function get_count(obj, str) {
 						for(var prop in item.value) {
 							if (prop.includes(str)) {
 								num++
-								console.log("// Set as memory variable (object/key)")
+								//console.log("// Set as memory variable (object/key)")
 							} else if (item.value[prop] && item.value[prop].includes(str)) {
 								num++
-								console.log("// Set as memory variable (object/value)")
+								//console.log("// Set as memory variable (object/value)")
 							}
 						}
 					}
@@ -390,12 +390,12 @@ function get_count(obj, str) {
 
 			// Part of Message to user
 			if (elem.type == 'message' && elem.value && elem.value.en) {
-				console.log("checking array")
+				//console.log("checking array")
 				elem.value.en.forEach(function(item) {
-					console.log("message: " + item.value)
+					//console.log("message: " + item.value)
 					if ( item.value.includes(str) ) {
 						num++
-						console.log("// Part of Message to user")
+						//console.log("// Part of Message to user")
 					}
 				})
 			}
@@ -419,35 +419,35 @@ function get_count(obj, str) {
 			if (elem.left && elem.left.length > 0) {
 				i = 0
 				i += get_count(elem.left, str)
-				if (i > 0) {num += i; console.log("// Left side of conditional")}
+				//if (i > 0) {num += i; console.log("// Left side of conditional")}
 			}
 
 			// Right side of conditional
 			if (elem.right && elem.right.length > 0) {
 				i = 0
 				i += get_count(elem.right, str)
-				if (i > 0) {num += i; console.log("// Right side of conditional")}
+				//if (i > 0) {num += i; console.log("// Right side of conditional")}
 			}
 
 			// "If #entity is missing"
 			if (elem.on_empty_condition ) {
 				i = 0
 				i += get_count([elem.on_empty_condition], str)
-				if (i > 0) {num += i; console.log("// If #entity is missing")}
+				//if (i > 0) {num += i; console.log("// If #entity is missing")}
 			}
 
 			// Validators
 			if (elem.on_validation_condition ) {
 				i = 0
 				i += get_count([elem.on_validation_condition], str)
-				if (i > 0) {num += i; console.log("// Validators")}
+				//if (i > 0) {num += i; console.log("// Validators")}
 			}
 			
 			// "If #entity is complete"
 			if (elem.on_success_condition ) {
 				i = 0
 				i += get_count([elem.on_success_condition], str)
-				if (i > 0) {num += i; console.log("// If #entity is complete")}
+				//if (i > 0) {num += i; console.log("// If #entity is complete")}
 			}
 
 		})

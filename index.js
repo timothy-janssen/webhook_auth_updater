@@ -356,7 +356,8 @@ function get_count(obj, str) {
 			// Set as memory variable
 			if (elem.type == 'edit_memory' && elem.value && elem.value.set) {
 				elem.value.set.forEach(function(item) {
-					if ( item.value.includes(str) ) {
+					console.log(item)
+					if ( item.value && item.value.includes(str) ) {
 						num++
 						console.log("// Set as memory variable")
 					}

@@ -233,18 +233,36 @@ app.get('/', function (req, res) {
     `);
 });
 
-
-
 app.get('/where_used', function (req, res) {
+	res.end(`
+        <!doctype html>
+        <html>
+        <body>
+            <form action="/where_used" method="post">
+            	Bot Data<br>
+                Bot Owner ID: <input type="text" name="user_id" /><br>
+                Bot ID: <input type="text" name="bot_id" /><br>
+                Version ID: <input type="text" name="version_id" /><br>
+                Developer Token: <input type="text" name="dev_token" /><br>
+                <br>Search<br>
+                Entity or variable name: <input type="text" name="search_str" /><br>
+                <button>Search bot</button>
+            </form>
+        </body>
+        </html>
+    `);
+})
+
+app.post('/where_used', function (req, res) {
 
 	var where_used_return_string = ''
 
-	user_id = 'successfactors-sap'
-	bot_id = 'digital-assistant-tim'
-	version_id = 'v1'
-	dev_token = 'd303ca6525e18f27e23ad299d90f55ce'
+	user_id =  req.body.user_id || 'successfactors-sap'
+	bot_id =  req.body.bot_id || 'digital-assistant-tim'
+	version_id = req.body.version_id || 'v1'
+	dev_token = req.body.dev_token || 'd303ca6525e18f27e23ad299d90f55ce'
 
-	search_str = 'list-type'
+	search_str = req.body.search_str || 'list-type'
 
 	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
 
@@ -272,41 +290,43 @@ app.get('/where_used', function (req, res) {
 
 			console.log("Skill: " + skill_name)
 
-			get_skill_tasks = {
-				url:    base_url + "/skills/" + skill_name + "/task",
+			get_skill_triggers = {
+				url:    base_url + "/skills/" + skill_name + "/trigger",
 			   	method:  "GET",
 			   	headers: header
-			} 
-			console.log("TASKS: " + skill_name)
-			return rp.get(get_skill_tasks)
-			.then( function(data){
+			}
+
+			console.log("TRIGGERS: " + skill_name)
+			return rp.get(get_skill_triggers)
+			.then( function(data){				
 				if(data) {
-					tasks = JSON.parse(data).results.children
-					num = get_count(tasks, search_str)
+					data = JSON.parse(data)
+					triggers = data.results.children
+					num = get_count(triggers, search_str)
 
 					if ( num > 0 ) {
-						res.write(`${num} occurances of ${search_str} in ${skill_name} requirements\n`)
+						res.write(`${num} occurances of ${search_str} in ${skill_name} trigger\n`)
 					}
 				}
-	
-				get_skill_triggers = {
-					url:    base_url + "/skills/" + skill_name + "/trigger",
+
+
+				get_skill_tasks = {
+					url:    base_url + "/skills/" + skill_name + "/task",
 				   	method:  "GET",
 				   	headers: header
-				}
-				console.log("TRIGGERS: " + skill_name)
-				return rp.get(get_skill_triggers)
-				.then( function(data){				
+				} 
+				console.log("TASKS: " + skill_name)
+				return rp.get(get_skill_tasks)
+				.then( function(data){
 					if(data) {
-						data = JSON.parse(data)
-						triggers = data.results.children
-						num = get_count(triggers, search_str)
-
+						tasks = JSON.parse(data).results.children
+						num = get_count(tasks, search_str)
+	
 						if ( num > 0 ) {
-							res.write(`${num} occurances of ${search_str} in ${skill_name} trigger\n`)
+							res.write(`${num} occurances of ${search_str} in ${skill_name} requirements\n`)
 						}
 					}
-
+	
 					get_skill_actions = {
 						url:    base_url + "/skills/" + skill_name + "/results",
 				   		method:  "GET",
@@ -337,10 +357,19 @@ app.get('/where_used', function (req, res) {
 			.catch( function(err) {
 				console.log(err.message)
 			})
-		}, {concurrency: 10})
+		}, {concurrency: 8})
 		.then( function() {
 			res.end()
 		})
+	})
+	.catch( function(err) {
+		console.log(err.message)
+		
+		res.write(`<p>There was an error with your request</p>`)
+    	res.write(`<p>First, check your Owner/Bot/Version ID's</p>`)
+    	res.write(`<p>Then, check your developer token here: <a href="https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens">https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens</a></p>`)
+    	res.write(`<p>If the link doesn't work, then the Owner/Bot ID's are wrong ;)</p>`)
+    	res.end()
 	})
 });
 

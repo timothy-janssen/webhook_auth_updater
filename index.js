@@ -327,7 +327,16 @@ app.get('/where_used', function (req, res) {
 							}
 						}
 					})
+					.catch( function(err) {
+						console.log(err.message)
+					})
 				})
+				.catch( function(err) {
+					console.log(err.message)
+				})
+			})
+			.catch( function(err) {
+				console.log(err.message)
 			})
 		}, {concurrency: 1})
 		.then( function() {

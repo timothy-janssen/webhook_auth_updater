@@ -267,6 +267,7 @@ app.post('/where_used', function (req, res) {
 	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
 
 	var err_skills = '<p>There was an error with retrieving data for the following skills:'
+	err_skills_check = err_skills
 
 	header = {
 	   	"Authorization": "Token " + dev_token,

@@ -239,12 +239,12 @@ app.get('/where_used', function (req, res) {
 
 	var where_used_return_string = ''
 
-	user_id = 'timoteo'
-	bot_id = 'cool-kids'
+	user_id = 'successfactors-sap'
+	bot_id = 'digital-assistant-tim'
 	version_id = 'v1'
-	dev_token = 'ffbb04088c3e27ecdbcb38623d589c31'
+	dev_token = 'd303ca6525e18f27e23ad299d90f55ce'
 
-	search_str = 'money'
+	search_str = 'list-type'
 
 	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
 

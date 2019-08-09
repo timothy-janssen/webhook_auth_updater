@@ -370,7 +370,7 @@ function get_count(obj, str) {
 							if (prop.includes(str)) {
 								num++
 								console.log("// Set as memory variable (object/key)")
-							} else if (item.value[prop].includes(str)) {
+							} else if (item.value[prop] && item.value[prop].includes(str)) {
 								num++
 								console.log("// Set as memory variable (object/value)")
 							}

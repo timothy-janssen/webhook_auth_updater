@@ -289,7 +289,7 @@ app.post('/where_used', function (req, res) {
 		skills = JSON.parse(data).results
 
 		Promise.map(skills, function(skill) {
-			var skill_name = skill.name
+			var skill_name = skill.slug
 			var skill_str_to_user = '<pre>' + skill_name
 			var skill_str_to_user_check = skill_str_to_user
 
@@ -359,17 +359,17 @@ app.post('/where_used', function (req, res) {
 					})
 					.catch( function(err) {
 						console.log(err.message)
-						err_skills += '<br>' + skill_name + '(Actions)'
+						err_skills += '<br>' + skill_name + ' (Actions)'
 					})
 				})
 				.catch( function(err) {
 					console.log(err.message)
-					err_skills += '<br>' + skill_name + '(Requirements)'
+					err_skills += '<br>' + skill_name + ' (Requirements)'
 				})
 			})
 			.catch( function(err) {
 				console.log(err.message)
-				err_skills += '<br>' + skill_name + '(Triggers)'
+				err_skills += '<br>' + skill_name + ' (Triggers)'
 			})
 		}, {concurrency: 8})
 		.then( function() {

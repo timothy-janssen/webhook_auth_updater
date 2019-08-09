@@ -287,7 +287,7 @@ app.post('/where_used', function (req, res) {
 
 		Promise.map(skills, function(skill) {
 			var skill_name = skill.name
-			var skill_str_to_user = '<p>' + skill_name + '</p>'
+			var skill_str_to_user = '<pre>' + skill_name
 			var skill_str_to_user_check = skill_str_to_user
 
 			console.log("Skill: " + skill_name)
@@ -307,7 +307,7 @@ app.post('/where_used', function (req, res) {
 					num = get_count(triggers, search_str)
 
 					if ( num > 0 ) {
-						skill_str_to_user += '<p>	Triggers: ' + num + '</p>'
+						skill_str_to_user += '<br>&TabTriggers: ' + num
 						//res.write(`${num} occurances of ${search_str} in ${skill_name} trigger\n`)
 					}
 				}
@@ -326,7 +326,7 @@ app.post('/where_used', function (req, res) {
 						num = get_count(tasks, search_str)
 	
 						if ( num > 0 ) {
-							skill_str_to_user += '<p>	Requirements: ' + num + '</p>'
+							skill_str_to_user += '<br>&TabRequirements: ' + num
 							//res.write(`${num} occurances of ${search_str} in ${skill_name} requirements\n`)
 						}
 					}
@@ -346,12 +346,12 @@ app.post('/where_used', function (req, res) {
 							num = get_count(actions, search_str)
 	
 							if ( num > 0 ) {
-								skill_str_to_user += '<p>	Actions: ' + num + '</p>'
+								skill_str_to_user += '<br>&TabActions: ' + num
 								//res.write(`${num} occurances of ${search_str} in ${skill_name} actions\n`)
 							}
 						}
 						if (skill_str_to_user.length > skill_str_to_user_check.length) {
-							res.write(`<p>${skill_str_to_user}</p>`)
+							res.write(`${skill_str_to_user}</pre>`)
 						}
 					})
 					.catch( function(err) {

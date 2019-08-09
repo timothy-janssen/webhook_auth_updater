@@ -356,15 +356,29 @@ function get_count(obj, str) {
 			// Set as memory variable
 			if (elem.type == 'edit_memory' && elem.value && elem.value.set) {
 				elem.value.set.forEach(function(item) {
-					console.log(item)
-					if ( item.value && item.value.includes(str) ) {
+
+					// Set variable to string
+					if ( item.value && typeof item.value == 'string' && item.value.includes(str) ) {
 						num++
 						console.log("// Set as memory variable")
+					}
+
+					// Set variable to object
+					if ( item.value && typeof item.value == 'object' ) {
+
+						for(var prop in item.value) {
+							if (prop.includes(str)) {
+								num++
+								console.log("// Set as memory variable (object/key)")
+							} else if (item.value[prop].includes(str)) {
+								num++
+								console.log("// Set as memory variable (object/value)")
+							}
+						}
 					}
 				})
 			}
 
-			if (elem.value && elem.value.en) {console.log('' + typeof elem.value.en)}
 			// Part of Message to user
 			if (elem.type == 'message' && elem.value && elem.value.en) {
 				console.log("checking array")

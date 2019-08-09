@@ -277,7 +277,7 @@ app.get('/where_used', function (req, res) {
 			   	method:  "GET",
 			   	headers: header
 			} 
-			console.log("TASKS:")
+			console.log("TASKS: " + skill_name)
 			return rp.get(get_skill_tasks)
 			.then( function(data){
 				if(data) {
@@ -294,7 +294,7 @@ app.get('/where_used', function (req, res) {
 				   	method:  "GET",
 				   	headers: header
 				}
-				console.log("TRIGGERS:")
+				console.log("TRIGGERS: " + skill_name)
 				return rp.get(get_skill_triggers)
 				.then( function(data){				
 					if(data) {
@@ -313,7 +313,7 @@ app.get('/where_used', function (req, res) {
 				   		headers: header
 					}
 
-					console.log("ACTIONS:")
+					console.log("ACTIONS: " + skill_name)
 					return rp.get(get_skill_actions)
 					.then( function(data){				
 						if(data) {

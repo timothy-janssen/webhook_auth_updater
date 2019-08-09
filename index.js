@@ -255,14 +255,14 @@ app.get('/where_used', function (req, res) {
 
 app.post('/where_used', function (req, res) {
 
-	var where_used_return_string = ''
-
 	user_id =  req.body.user_id || 'successfactors-sap'
 	bot_id =  req.body.bot_id || 'digital-assistant-tim'
 	version_id = req.body.version_id || 'v1'
 	dev_token = req.body.dev_token || 'd303ca6525e18f27e23ad299d90f55ce'
 
 	search_str = req.body.search_str || 'list-type'
+
+	res.write(`Searching for ${search_str} in version ${version_id} of <a href="https://cai.tools.sap/${user_id}/${bot_id}">this bot</a>`)
 
 	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
 

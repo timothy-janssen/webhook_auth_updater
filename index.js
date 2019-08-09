@@ -266,6 +266,8 @@ app.post('/where_used', function (req, res) {
 
 	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
 
+	var err_skills = '<p>There was an error with retrieving data for the following skills:'
+
 	header = {
 	   	"Authorization": "Token " + dev_token,
 	   	"Accept": "application/json",
@@ -356,17 +358,23 @@ app.post('/where_used', function (req, res) {
 					})
 					.catch( function(err) {
 						console.log(err.message)
+						err_skills += '<br>' + skill_name + '(Actions)'
 					})
 				})
 				.catch( function(err) {
 					console.log(err.message)
+					err_skills += '<br>' + skill_name + '(Requirements)'
 				})
 			})
 			.catch( function(err) {
 				console.log(err.message)
+				err_skills += '<br>' + skill_name + '(Triggers)'
 			})
 		}, {concurrency: 8})
 		.then( function() {
+			if (err_skills > err_skills_check) {
+				res.write(err_skills + '</p>')
+			}
 			res.end()
 		})
 	})

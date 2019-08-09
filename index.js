@@ -282,7 +282,6 @@ app.get('/where_used', function (req, res) {
 			.then( function(data){
 				if(data) {
 					tasks = JSON.parse(data).results.children
-					search_str = 'money'
 					num = get_count(tasks, search_str)
 
 					if ( num > 0 ) {

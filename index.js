@@ -455,46 +455,46 @@ function get_count(obj, str, debug) {
 
 			// Check the element's children
 			if (elem.children && elem.children.length > 0) {
-				num += get_count(elem.children, str)
+				num += get_count(elem.children, str, debug)
 			}
 
 			// Check the element's actions
 			if (elem.actions && elem.actions.length > 0) {
-				num += get_count(elem.actions, str)
+				num += get_count(elem.actions, str, debug)
 			}
 
 			// Left side of conditional
 			if (elem.left && elem.left.length > 0) {
 				i = 0
-				i += get_count(elem.left, str)
+				i += get_count(elem.left, str, debug)
 				//if (i > 0) {num += i; console.log("// Left side of conditional")}
 			}
 
 			// Right side of conditional
 			if (elem.right && elem.right.length > 0) {
 				i = 0
-				i += get_count(elem.right, str)
+				i += get_count(elem.right, str, debug)
 				//if (i > 0) {num += i; console.log("// Right side of conditional")}
 			}
 
 			// "If #entity is missing"
 			if (elem.on_empty_condition ) {
 				i = 0
-				i += get_count([elem.on_empty_condition], str)
+				i += get_count([elem.on_empty_condition], str, debug)
 				//if (i > 0) {num += i; console.log("// If #entity is missing")}
 			}
 
 			// Validators
 			if (elem.on_validation_condition ) {
 				i = 0
-				i += get_count([elem.on_validation_condition], str)
+				i += get_count([elem.on_validation_condition], str, debug)
 				//if (i > 0) {num += i; console.log("// Validators")}
 			}
 			
 			// "If #entity is complete"
 			if (elem.on_success_condition ) {
 				i = 0
-				i += get_count([elem.on_success_condition], str)
+				i += get_count([elem.on_success_condition], str, debug)
 				//if (i > 0) {num += i; console.log("// If #entity is complete")}
 			}
 

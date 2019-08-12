@@ -398,9 +398,9 @@ function get_count(obj, str) {
 		return 0
 	} else {
 		obj.forEach( function(elem) {
-			/*console.log('************************')
+			console.log('************************')
 			console.log(elem)
-			console.log('************************')*/
+			console.log('************************')
 
 			// As part of condition
 			if (elem.value && typeof elem.value === 'string' && elem.value.includes(str)) {

@@ -315,12 +315,12 @@ app.post('/where_used', function (req, res) {
 					}
 				}
 
-
 				get_skill_tasks = {
 					url:    base_url + "/skills/" + skill_name + "/task",
 				   	method:  "GET",
 				   	headers: header
-				} 
+				}
+
 				console.log("TASKS: " + skill_name)
 				return rp.get(get_skill_tasks)
 				.then( function(data){
@@ -346,6 +346,7 @@ app.post('/where_used', function (req, res) {
 						if(data) {
 							data = JSON.parse(data)
 							actions = data.results.children
+							if(skill_name == 'cooler') {console.log(actions)}
 							num = get_count(actions, search_str)
 	
 							if ( num > 0 ) {

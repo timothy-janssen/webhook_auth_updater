@@ -346,8 +346,8 @@ app.post('/where_used', function (req, res) {
 						if(data) {
 							data = JSON.parse(data)
 							actions = data.results.children
-							if(skill_name == 'cooler') {console.log(actions)}
-							num = get_count(actions, search_str)
+							if(skill_name == 'cooler') {get_count(actions, search_str, true)}
+							else {num = get_count(actions, search_str)}
 	
 							if ( num > 0 ) {
 								skill_str_to_user += '<br>\tActions: ' + num
@@ -392,15 +392,17 @@ app.post('/where_used', function (req, res) {
 });
 
 
-function get_count(obj, str) {
+function get_count(obj, str, debug) {
 	var num = 0;
 	if (obj == null || typeof obj == 'undefined') {
 		return 0
 	} else {
 		obj.forEach( function(elem) {
-			console.log('************************')
-			console.log(elem)
-			console.log('************************')
+			if (debug) {
+				console.log('************************')
+				console.log(elem)
+				console.log('************************')
+			}
 
 			// As part of condition
 			if (elem.value && typeof elem.value === 'string' && elem.value.includes(str)) {

@@ -444,6 +444,15 @@ function get_count(obj, str, debug) {
 				})
 			}
 
+			if(elem.type == 'http' && elem.value && typeof elem.value.url == 'string') {
+				if(elem.value.url.includes(str)){
+					num++
+					if (debug) {
+						console.log("// Part of http URL")
+					}
+				}	
+			}
+
 			// Part of Message to user
 			if (elem.type == 'message' && elem.value && elem.value.en) {
 				//console.log("checking array")

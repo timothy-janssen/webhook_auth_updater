@@ -442,8 +442,9 @@ function get_count(obj, str, debug) {
 				if(elem.value.header && elem.value.header.parameters) {
 					num += check_obj(elem.value.header.parameters, str, debug)
 				}
-
-				num += check_obj(elem.value.header.body, str, debug)
+				if ( elem.value.body ) {
+					num += check_obj(elem.value.body, str, debug)
+				}
 			}
 
 			// Part of Message to user

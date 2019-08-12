@@ -426,20 +426,7 @@ function get_count(obj, str, debug) {
 
 					// Set variable to object
 					if ( item.value && typeof item.value == 'object' ) {
-
-						for(var prop in item.value) {
-							if (prop.includes(str)) {
-								num++
-								if (debug) {
-									console.log("// Set as memory variable (object/key)")
-								}
-							} else if (item.value[prop] && item.value[prop].includes(str)) {
-								num++
-								if (debug) {
-									console.log("// Set as memory variable (object/value)")
-								}
-							}
-						}
+						check_obj(item.value, str, debug)
 					}
 				})
 			}
@@ -450,7 +437,13 @@ function get_count(obj, str, debug) {
 					if (debug) {
 						console.log("// Part of http URL")
 					}
-				}	
+				}
+
+				if(elem.value.header && elem.value.header.parameters) {
+					num += check_obj(elem.value.header.parameters, str, debug)
+				}
+
+				num += check_obj(elem.value.header.body, str, debug)
 			}
 
 			// Part of Message to user
@@ -515,5 +508,24 @@ function get_count(obj, str, debug) {
 		return num
 	}
 }
+
+function check_obj(obj, str, debug){
+	var num = 0
+	for(var prop in obj) {
+		if (prop.includes(str)) {
+			num++
+			if (debug) {
+				console.log("// Set as memory variable (object/key)")
+			}
+		} else if (obj[prop] && obj[prop].includes(str)) {
+			num++
+			if (debug) {
+				console.log("// Set as memory variable (object/value)")
+			}
+		}
+	}
+	return num
+}
+
 
 app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`));

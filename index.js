@@ -346,7 +346,7 @@ app.post('/where_used', function (req, res) {
 						if(data) {
 							data = JSON.parse(data)
 							actions = data.results.children
-							if(skill_name == 'cooler') {get_count(actions, search_str, true)}
+							if(skill_name == 'cooler') {num = get_count(actions, search_str, true)}
 							else {num = get_count(actions, search_str)}
 	
 							if ( num > 0 ) {
@@ -407,7 +407,9 @@ function get_count(obj, str, debug) {
 			// As part of condition
 			if (elem.value && typeof elem.value === 'string' && elem.value.includes(str)) {
 				num++
-				//console.log("// As part of condition")
+				if (debug) {
+					console.log("// As part of condition")
+				}
 			}
 
 			// Set as memory variable
@@ -417,7 +419,9 @@ function get_count(obj, str, debug) {
 					// Set variable to string
 					if ( item.value && typeof item.value == 'string' && item.value.includes(str) ) {
 						num++
-						//console.log("// Set as memory variable")
+						if (debug) {
+							console.log("// Set as memory variable")
+						}
 					}
 
 					// Set variable to object
@@ -426,10 +430,14 @@ function get_count(obj, str, debug) {
 						for(var prop in item.value) {
 							if (prop.includes(str)) {
 								num++
-								//console.log("// Set as memory variable (object/key)")
+								if (debug) {
+									console.log("// Set as memory variable (object/key)")
+								}
 							} else if (item.value[prop] && item.value[prop].includes(str)) {
 								num++
-								//console.log("// Set as memory variable (object/value)")
+								if (debug) {
+									console.log("// Set as memory variable (object/value)")
+								}
 							}
 						}
 					}
@@ -443,7 +451,9 @@ function get_count(obj, str, debug) {
 					//console.log("message: " + item.value)
 					if ( item.value.includes(str) ) {
 						num++
-						//console.log("// Part of Message to user")
+						if (debug) {
+							console.log("// Part of Message to user")
+						}
 					}
 				})
 			}
@@ -451,6 +461,9 @@ function get_count(obj, str, debug) {
 			// as Requirement
 			if (elem.data && typeof elem.data.name === 'string' && elem.data.name.includes(str)) {
 				num++
+				if (debug) {
+					console.log("// Part of Requirement")
+				}
 			}
 
 			// Check the element's children
@@ -465,37 +478,27 @@ function get_count(obj, str, debug) {
 
 			// Left side of conditional
 			if (elem.left && elem.left.length > 0) {
-				i = 0
-				i += get_count(elem.left, str, debug)
-				//if (i > 0) {num += i; console.log("// Left side of conditional")}
+				num += get_count(elem.left, str, debug)
 			}
 
 			// Right side of conditional
 			if (elem.right && elem.right.length > 0) {
-				i = 0
-				i += get_count(elem.right, str, debug)
-				//if (i > 0) {num += i; console.log("// Right side of conditional")}
+				num += get_count(elem.right, str, debug)
 			}
 
 			// "If #entity is missing"
 			if (elem.on_empty_condition ) {
-				i = 0
-				i += get_count([elem.on_empty_condition], str, debug)
-				//if (i > 0) {num += i; console.log("// If #entity is missing")}
+				num += get_count([elem.on_empty_condition], str, debug)
 			}
 
 			// Validators
 			if (elem.on_validation_condition ) {
-				i = 0
-				i += get_count([elem.on_validation_condition], str, debug)
-				//if (i > 0) {num += i; console.log("// Validators")}
+				num += get_count([elem.on_validation_condition], str, debug)
 			}
 			
 			// "If #entity is complete"
 			if (elem.on_success_condition ) {
-				i = 0
-				i += get_count([elem.on_success_condition], str, debug)
-				//if (i > 0) {num += i; console.log("// If #entity is complete")}
+				num += get_count([elem.on_success_condition], str, debug)
 			}
 
 		})

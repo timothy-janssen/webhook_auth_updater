@@ -210,7 +210,7 @@ app.post('/add_auth', function (req, res) {
     })
 })
 
-app.get('/', function (req, res) {
+app.get('/add_auth', function (req, res) {
 
     res.end(`
         <!doctype html>
@@ -441,17 +441,21 @@ function get_count(obj, str, debug) {
 
 				if(elem.value.header && elem.value.header.parameters) {
 					num += check_obj(elem.value.header.parameters, str, debug)
+					if (debug) {
+						console.log("// Part of http header")
+					}
 				}
 				if ( elem.value.body ) {
 					num += check_obj(elem.value.body, str, debug)
+					if (debug) {
+						console.log("// Part of http body")
+					}
 				}
 			}
 
 			// Part of Message to user
 			if (elem.type == 'message' && elem.value && elem.value.en) {
-				//console.log("checking array")
 				elem.value.en.forEach(function(item) {
-					//console.log("message: " + item.value)
 					if ( item.value.includes(str) ) {
 						num++
 						if (debug) {

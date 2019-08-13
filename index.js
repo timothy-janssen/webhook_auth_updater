@@ -221,7 +221,7 @@ app.get('/add_auth', function (req, res) {
                 Bot Owner ID: <input type="text" name="user_id" /><br>
                 Bot ID: <input type="text" name="bot_id" /><br>
                 Version ID: <input type="text" name="version_id" /><br>
-                Developer Token: <input type="text" name="dev_token" /><br>
+                Developer Token: <input type="text" name="dev_token" size="33" /><br>
                 <br>Authentication Template Data<br>
                 Template Name: <input type="text" name="template_name" /><br>
                 Template Username: <input type="text" name="username" /><br>
@@ -243,7 +243,7 @@ app.get('/where_used', function (req, res) {
                 Bot Owner ID: <input type="text" name="user_id" /><br>
                 Bot ID: <input type="text" name="bot_id" /><br>
                 Version ID: <input type="text" name="version_id" /><br>
-                Developer Token: <input type="text" name="dev_token" /><br>
+                Developer Token: <input type="text" name="dev_token" size="33" /><br>
                 <br>Search<br>
                 Entity or variable name: <input type="text" name="search_str" /><br>
                 <button>Search bot</button>

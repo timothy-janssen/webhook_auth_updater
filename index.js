@@ -255,12 +255,17 @@ app.get('/where_used', function (req, res) {
 
 app.post('/where_used', function (req, res) {
 
-	user_id =  req.body.user_id || 'successfactors-sap'
-	bot_id =  req.body.bot_id || 'digital-assistant-tim'
-	version_id = req.body.version_id || 'v1'
-	dev_token = req.body.dev_token || 'd303ca6525e18f27e23ad299d90f55ce'
+	user_id =  req.body.user_id
+	bot_id =  req.body.bot_id
+	version_id = req.body.version_id
+	dev_token = req.body.dev_token
 
-	search_str = req.body.search_str || 'list-type'
+	search_str = req.body.search_str
+
+	if  ( typeof user_id == 'undefined' ) {
+		res.send('Please enter a bot owner ID')
+		return
+	}
 
 	res.write(`<p>Searching for ${search_str} in version ${version_id} of <a href="https://cai.tools.sap/${user_id}/${bot_id}">this bot</a><p><br>`)
 

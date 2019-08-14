@@ -173,6 +173,29 @@ function call_add_auths(reqs, res) {
 	})
 }
 
+app.get('/add_auth', function (req, res) {
+
+    res.end(`
+        <!doctype html>
+        <html>
+        <body>
+            <form action="/add_auth" method="post">
+            	Bot Data<br>
+                Bot Owner ID: <input type="text" name="user_id" /><br>
+                Bot ID: <input type="text" name="bot_id" /><br>
+                Version ID: <input type="text" name="version_id" /><br>
+                Developer Token: <input type="text" name="dev_token" size="33" /><br>
+                <br>Authentication Template Data<br>
+                Template Name: <input type="text" name="template_name" /><br>
+                Template Username: <input type="text" name="username" /><br>
+                Template Password: <input type="text" name="password" /><br>
+                <button>Add Auth data</button>
+            </form>
+        </body>
+        </html>
+    `);
+});
+
 app.post('/add_auth', function (req, res) {
 
 	reset_vars()
@@ -210,29 +233,6 @@ app.post('/add_auth', function (req, res) {
     })
 })
 
-app.get('/add_auth', function (req, res) {
-
-    res.end(`
-        <!doctype html>
-        <html>
-        <body>
-            <form action="/add_auth" method="post">
-            	Bot Data<br>
-                Bot Owner ID: <input type="text" name="user_id" /><br>
-                Bot ID: <input type="text" name="bot_id" /><br>
-                Version ID: <input type="text" name="version_id" /><br>
-                Developer Token: <input type="text" name="dev_token" size="33" /><br>
-                <br>Authentication Template Data<br>
-                Template Name: <input type="text" name="template_name" /><br>
-                Template Username: <input type="text" name="username" /><br>
-                Template Password: <input type="text" name="password" /><br>
-                <button>Add Auth data</button>
-            </form>
-        </body>
-        </html>
-    `);
-});
-
 app.get('/where_used', function (req, res) {
 	res.end(`
         <!doctype html>
@@ -255,12 +255,12 @@ app.get('/where_used', function (req, res) {
 
 app.post('/where_used', function (req, res) {
 
-	user_id =  req.body.user_id
-	bot_id =  req.body.bot_id
-	version_id = req.body.version_id
-	dev_token = req.body.dev_token
+	var user_id =  req.body.user_id
+	var bot_id =  req.body.bot_id
+	var version_id = req.body.version_id
+	var dev_token = req.body.dev_token
 
-	search_str = req.body.search_str
+	var search_str = req.body.search_str
 
 	if  ( typeof user_id == 'undefined' ) {
 		res.send('Please enter a bot owner ID')

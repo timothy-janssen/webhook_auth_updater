@@ -208,6 +208,15 @@ app.post('/add_auth', function (req, res) {
 	username = req.body.username
 	password = req.body.password
 
+	if  ( typeof user_id == 'undefined' 	|| user_id.length == 0 		||
+		  typeof bot_id == 'undefined' 		|| bot_id.length == 0 		||
+		  typeof version_id == 'undefined' 	|| version_id.length == 0 	||
+		  typeof dev_token == 'undefined' 	|| dev_token.length == 0 ) {
+
+		res.send('Please enter all the valid bot data')
+		return
+	}
+
 	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
 
 	header = {
@@ -264,6 +273,26 @@ app.post('/where_used', function (req, res) {
 
 	if  ( typeof user_id == 'undefined' || user_id.length == 0 ) {
 		res.send('Please enter a bot owner ID')
+		return
+	}
+
+	if  ( typeof bot_id == 'undefined' || bot_id.length == 0 ) {
+		res.send('Please enter a bot ID')
+		return
+	}
+
+	if  ( typeof version_id == 'undefined' || version_id.length == 0 ) {
+		res.send('Please enter a version ID')
+		return
+	}
+
+	if  ( typeof dev_token == 'undefined' || dev_token.length == 0 ) {
+		res.send('Please enter a valid developer token')
+		return
+	}
+
+	if  ( typeof search_str == 'undefined' || search_str.length == 0 ) {
+		res.send('Please enter an entity or variable name')
 		return
 	}
 

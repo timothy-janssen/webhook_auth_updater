@@ -262,7 +262,7 @@ app.post('/where_used', function (req, res) {
 
 	var search_str = req.body.search_str
 
-	if  ( typeof user_id == 'undefined' ) {
+	if  ( typeof user_id == 'undefined' || user_id.length == 0 ) {
 		res.send('Please enter a bot owner ID')
 		return
 	}

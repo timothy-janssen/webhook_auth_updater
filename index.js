@@ -463,6 +463,15 @@ function get_count(obj, str, debug) {
 						check_obj(item.value, str, debug)
 					}
 				})
+
+				elem.value.unset.forEach(function(item) {
+					if  (typeof item == 'string' && item.includes(str) ) {
+						num++
+						if (debug) {
+							console.log("// Unset memory variable")
+						}
+					}
+				})
 			}
 
 			if(elem.type == 'http' && elem.value && typeof elem.value.url == 'string') {

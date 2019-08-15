@@ -324,7 +324,7 @@ app.post('/where_used', function (req, res) {
 
 		Promise.map(skills, function(skill) {
 			var skill_name = skill.slug
-			var skill_str_to_user = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/skills' + skill_name + '">' + skill_name + '</a>'
+			var skill_str_to_user = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/skills/' + skill_name + '">' + skill_name + '</a>'
 			var skill_str_to_user_check = skill_str_to_user
 
 			console.log("Skill: " + skill_name)

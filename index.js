@@ -470,7 +470,7 @@ app.post('/where_used', function (req, res) {
 								var enrichments = JSON.parse(data).results.enrichments
 
 								Promise.map(enrichments, function(enrichment) {
-									console.log(search_str + " " enrichment.value)
+									console.log(search_str + " " + enrichment.value)
 
 									if(enrichment.value.includes(search_str)){
 										ent_str_to_usr += '<br>\t' + key_slug + ': ' + enrichment.value

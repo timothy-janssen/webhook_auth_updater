@@ -323,102 +323,102 @@ app.post('/where_used', function (req, res) {
 	   	headers: header
 	}
 
-	rp.get(get_skills)
-	.then( function(data) {
+	// rp.get(get_skills)
+	// .then( function(data) {
 
-		skills = JSON.parse(data).results
+	// 	skills = JSON.parse(data).results
 
-		Promise.map(skills, function(skill) {
-			var skill_name = skill.slug
-			var skill_str_to_user = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/skills/' + skill_name + '">' + skill_name + '</a>'
-			var skill_str_to_user_check = skill_str_to_user
+	// 	Promise.map(skills, function(skill) {
+	// 		var skill_name = skill.slug
+	// 		var skill_str_to_user = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/skills/' + skill_name + '">' + skill_name + '</a>'
+	// 		var skill_str_to_user_check = skill_str_to_user
 
-			console.log("Skill: " + skill_name)
+	// 		console.log("Skill: " + skill_name)
 
-			get_skill_triggers = {
-				url:    base_url + "/builder/skills/" + skill_name + "/trigger",
-			   	method:  "GET",
-			   	headers: header
-			}
+	// 		get_skill_triggers = {
+	// 			url:    base_url + "/builder/skills/" + skill_name + "/trigger",
+	// 		   	method:  "GET",
+	// 		   	headers: header
+	// 		}
 
-			console.log("TRIGGERS: " + skill_name)
-			return rp.get(get_skill_triggers)
-			.then( function(data){				
-				if(data) {
-					data = JSON.parse(data)
-					triggers = data.results.children
-					num = get_count(triggers, search_str)
+	// 		console.log("TRIGGERS: " + skill_name)
+	// 		return rp.get(get_skill_triggers)
+	// 		.then( function(data){				
+	// 			if(data) {
+	// 				data = JSON.parse(data)
+	// 				triggers = data.results.children
+	// 				num = get_count(triggers, search_str)
 
-					if ( num > 0 ) {
-						skill_str_to_user += '<br>\tTriggers: ' + num
-						//res.write(`${num} occurances of ${search_str} in ${skill_name} trigger\n`)
-					}
-				}
+	// 				if ( num > 0 ) {
+	// 					skill_str_to_user += '<br>\tTriggers: ' + num
+	// 					//res.write(`${num} occurances of ${search_str} in ${skill_name} trigger\n`)
+	// 				}
+	// 			}
 
-				get_skill_tasks = {
-					url:    base_url + "/builder/skills/" + skill_name + "/task",
-				   	method:  "GET",
-				   	headers: header
-				}
+	// 			get_skill_tasks = {
+	// 				url:    base_url + "/builder/skills/" + skill_name + "/task",
+	// 			   	method:  "GET",
+	// 			   	headers: header
+	// 			}
 
-				console.log("TASKS: " + skill_name)
-				return rp.get(get_skill_tasks)
-				.then( function(data){
-					if(data) {
-						tasks = JSON.parse(data).results.children
-						num = get_count(tasks, search_str)
+	// 			console.log("TASKS: " + skill_name)
+	// 			return rp.get(get_skill_tasks)
+	// 			.then( function(data){
+	// 				if(data) {
+	// 					tasks = JSON.parse(data).results.children
+	// 					num = get_count(tasks, search_str)
 	
-						if ( num > 0 ) {
-							skill_str_to_user += '<br>\tRequirements: ' + num
-							//res.write(`${num} occurances of ${search_str} in ${skill_name} requirements\n`)
-						}
-					}
+	// 					if ( num > 0 ) {
+	// 						skill_str_to_user += '<br>\tRequirements: ' + num
+	// 						//res.write(`${num} occurances of ${search_str} in ${skill_name} requirements\n`)
+	// 					}
+	// 				}
 	
-					get_skill_actions = {
-						url:    base_url + "/builder/skills/" + skill_name + "/results",
-				   		method:  "GET",
-				   		headers: header
-					}
+	// 				get_skill_actions = {
+	// 					url:    base_url + "/builder/skills/" + skill_name + "/results",
+	// 			   		method:  "GET",
+	// 			   		headers: header
+	// 				}
 
-					console.log("ACTIONS: " + skill_name)
-					return rp.get(get_skill_actions)
-					.then( function(data){				
-						if(data) {
-							data = JSON.parse(data)
-							actions = data.results.children
-							if(skill_name == 'cooler') {num = get_count(actions, search_str, true)}
-							else {num = get_count(actions, search_str)}
+	// 				console.log("ACTIONS: " + skill_name)
+	// 				return rp.get(get_skill_actions)
+	// 				.then( function(data){				
+	// 					if(data) {
+	// 						data = JSON.parse(data)
+	// 						actions = data.results.children
+	// 						if(skill_name == 'cooler') {num = get_count(actions, search_str, true)}
+	// 						else {num = get_count(actions, search_str)}
 	
-							if ( num > 0 ) {
-								skill_str_to_user += '<br>\tActions: ' + num
-								//res.write(`${num} occurances of ${search_str} in ${skill_name} actions\n`)
-							}
-						}
-						if (skill_str_to_user.length > skill_str_to_user_check.length) {
-							res.write(`${skill_str_to_user}</pre>`)
-						}
-					})
-					.catch( function(err) {
-						console.log(err.message)
-						err_skills += '<br>' + skill_name + ' (Actions)'
-					})
-				})
-				.catch( function(err) {
-					console.log(err.message)
-					err_skills += '<br>' + skill_name + ' (Requirements)'
-				})
-			})
-			.catch( function(err) {
-				console.log(err.message)
-				err_skills += '<br>' + skill_name + ' (Triggers)'
-			})
-		}, {concurrency: 5})
-		.then( function() {
-			if (err_skills > err_skills_check) {
-				res.write(err_skills + '</p>')
-			}
-		})
-	}).then( function() {
+	// 						if ( num > 0 ) {
+	// 							skill_str_to_user += '<br>\tActions: ' + num
+	// 							//res.write(`${num} occurances of ${search_str} in ${skill_name} actions\n`)
+	// 						}
+	// 					}
+	// 					if (skill_str_to_user.length > skill_str_to_user_check.length) {
+	// 						res.write(`${skill_str_to_user}</pre>`)
+	// 					}
+	// 				})
+	// 				.catch( function(err) {
+	// 					console.log(err.message)
+	// 					err_skills += '<br>' + skill_name + ' (Actions)'
+	// 				})
+	// 			})
+	// 			.catch( function(err) {
+	// 				console.log(err.message)
+	// 				err_skills += '<br>' + skill_name + ' (Requirements)'
+	// 			})
+	// 		})
+	// 		.catch( function(err) {
+	// 			console.log(err.message)
+	// 			err_skills += '<br>' + skill_name + ' (Triggers)'
+	// 		})
+	// 	}, {concurrency: 5})
+	// 	.then( function() {
+	// 		if (err_skills > err_skills_check) {
+	// 			res.write(err_skills + '</p>')
+	// 		}
+	// 	})
+	// }).then( function() {
 		rp.get(get_entities)
 		.then( function(data) {
 			entities = JSON.parse(data).results
@@ -482,7 +482,7 @@ app.post('/where_used', function (req, res) {
 		.catch(function() {
 			console.log(err.message)
 		})
-	})
+/*	})
 	.catch( function(err) {
 		console.log(err.message)
 		
@@ -491,7 +491,7 @@ app.post('/where_used', function (req, res) {
     	res.write(`<p>Then, check your developer token here: <a href="https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens">https://cai.tools.sap/${user_id}/${bot_id}/settings/tokens</a></p>`)
     	res.write(`<p>If the link doesn't work, then the Owner/Bot ID's are wrong ;)</p>`)
     	res.end()
-	})
+	})*/
 });
 
 

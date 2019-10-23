@@ -476,17 +476,18 @@ app.post('/where_used', function (req, res) {
 							})
 						}, {concurrency: 5})
 					})
+					.then( function(){
+						if(ent_str_to_usr > ent_str_to_usr_check){
+							res.write(`${ent_str_to_usr}</pre>`)
+						}	
+						res.end()
+					})
 					.catch(function(err) {
 						console.log(err.message)
 					})
 				}
 			}, {concurrency: 5})
-			.then( function(){
-				if(ent_str_to_usr > ent_str_to_usr_check){
-					res.write(`${ent_str_to_usr}</pre>`)
-				}	
-				res.end()
-			})
+			
 		})
 		.catch(function(err) {
 			console.log(err.message)

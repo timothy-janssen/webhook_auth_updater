@@ -312,6 +312,14 @@ app.post('/where_used', function (req, res) {
 		"Content-Type": "application/json"
 	}
 
+	header_train = {
+	   	"Authorization": "Bearer ec4b01e0a3969d1e3ef2bbeffa34540e",
+	   	"Accept": "application/json",
+		"Cache-Control": "no-cache",
+		"Connection": "keep-alive",
+		"Content-Type": "application/json"
+	}
+
 	get_skills = {
 		url:    build_url + "/builder/skills",
 	   	method:  "GET",
@@ -321,7 +329,7 @@ app.post('/where_used', function (req, res) {
 	get_entities = {
 		url:    train_url + "/dataset/entities",
 	   	method:  "GET",
-	   	headers: header
+	   	headers: header_train
 	}
 
 	// rp.get(get_skills)
@@ -436,7 +444,7 @@ app.post('/where_used', function (req, res) {
 					get_entity_keys = {
 						url:    train_url + "/dataset/entities/" + entity_slug + "/keys",
 					   	method:  "GET",
-					   	headers: header
+					   	headers: header_train
 					}
 
 					return rp.get(get_entity_keys)
@@ -450,7 +458,7 @@ app.post('/where_used', function (req, res) {
 							get_enrichments = {
 								url:    train_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",
 							   	method:  "GET",
-							   	headers: header
+							   	headers: header_train
 							}
 
 							return rp.get(get_enrichments)
@@ -482,6 +490,7 @@ app.post('/where_used', function (req, res) {
 		})
 		.catch(function(err) {
 			console.log(err.message)
+			res.end()
 		})
 /*	})
 	.catch( function(err) {

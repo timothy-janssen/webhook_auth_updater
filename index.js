@@ -486,8 +486,7 @@ app.post('/where_used', function (req, res) {
 					.then( function(){
 						if(ent_str_to_usr > ent_str_to_usr_check){
 							res.write(`${ent_str_to_usr}</pre>`)
-						}	
-						res.end()
+						}
 					})
 					.catch(function(err) {
 						console.log("GET" + get_entity_keys.url)
@@ -499,7 +498,6 @@ app.post('/where_used', function (req, res) {
 		})
 		.catch(function(err) {
 			console.log(err.message)
-			res.end()
 		})
 /*	})
 	.catch( function(err) {

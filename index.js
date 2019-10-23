@@ -433,8 +433,8 @@ app.post('/where_used', function (req, res) {
 			entities = JSON.parse(data).results
 
 			Promise.map(entities, function(entity) {
-				var entity_id = entity.id
-				var entity_slug = entity.slug
+				entity_id = entity.id
+				entity_slug = entity.slug
 
 				var ent_str_to_usr = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/train/entities/' + entity_slug + '/enrichment">' + entity_slug + '</a>' 
 				var ent_str_to_usr_check = ent_str_to_usr
@@ -454,8 +454,8 @@ app.post('/where_used', function (req, res) {
 						keys = JSON.parse(data).results
 
 						Promise.map(keys, function(key) {
-							key_id = key.id
-							key_slug = key.slug
+							var key_id = key.id
+							var key_slug = key.slug
 
 							get_enrichments = {
 								url:    train_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",

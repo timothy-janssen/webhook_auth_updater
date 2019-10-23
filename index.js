@@ -474,6 +474,7 @@ app.post('/where_used', function (req, res) {
 								}, {concurrency: 1})
 							})
 							.catch(function(err) {
+								console.log("GET" + get_enrichments.url)
 								console.log(err.message)
 							})
 						}, {concurrency: 5})

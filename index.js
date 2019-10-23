@@ -313,11 +313,11 @@ app.post('/where_used', function (req, res) {
 	}
 
 	header_train = {
-	   	"Authorization": "Bearer ec4b01e0a3969d1e3ef2bbeffa34540e",
-	   	"Accept": "application/json",
-		"Cache-Control": "no-cache",
-		"Connection": "keep-alive",
-		"Content-Type": "application/json"
+	   	"Authorization": "Bearer ec4b01e0a3969d1e3ef2bbeffa34540e"//,
+	   	// "Accept": "application/json",
+		// "Cache-Control": "no-cache",
+		// "Connection": "keep-alive",
+		// "Content-Type": "application/json"
 	}
 
 	get_skills = {
@@ -506,7 +506,6 @@ app.post('/where_used', function (req, res) {
     	res.end()
 	})*/
 });
-
 
 function get_count(obj, str, debug) {
 	var num = 0;

@@ -483,12 +483,13 @@ app.post('/where_used', function (req, res) {
 								console.log(err.message)
 							})
 						}, {concurrency: 1})
+						.then( function(){
+							if(ent_str_to_usr > ent_str_to_usr_check){
+								res.write(`${ent_str_to_usr}</pre>`)
+							}
+						})
 					})
-					.then( function(){
-						if(ent_str_to_usr > ent_str_to_usr_check){
-							res.write(`${ent_str_to_usr}</pre>`)
-						}
-					})
+					
 					.catch(function(err) {
 						console.log("GET" + get_entity_keys.url)
 						console.log(err.message)

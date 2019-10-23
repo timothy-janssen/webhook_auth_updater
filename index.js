@@ -451,6 +451,7 @@ app.post('/where_used', function (req, res) {
 
 					return rp.get(get_entity_keys)
 					.then( function(data){
+						console.log(data)
 						ent_str_to_usr = ent_str_to_usr_check
 
 						keys = JSON.parse(data).results
@@ -467,6 +468,7 @@ app.post('/where_used', function (req, res) {
 
 							return rp.get(get_enrichments)
 							.then( function (data){
+								console.log(data)
 								enrichments = JSON.parse(data).results.enrichments
 
 								Promise.map(enrichments, function(enrichment) {

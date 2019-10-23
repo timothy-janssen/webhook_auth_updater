@@ -332,6 +332,69 @@ app.post('/where_used', function (req, res) {
 	   	headers: header_train
 	}
 
+
+	rp.get(get_entities)
+	.then( function(data) {
+		entities = JSON.parse(data).results
+		Promise.map(entities, function(entity) {
+			var entity_id = entity.id
+			var entity_slug = entity.slug
+			
+			if(entity.custom) {
+				get_entity_keys = {
+					url:    train_url + "/dataset/entities/" + entity_slug + "/keys",
+				   	method:  "GET",
+				   	headers: header_train
+				}
+				var ent_str_to_usr = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/train/entities/' + entity_slug + '/enrichment">' + entity_slug + '</a>' 
+				var ent_str_to_usr_check = ent_str_to_usr
+				return rp.get(get_entity_keys)
+				.then( function(data){
+					ent_str_to_usr = ent_str_to_usr_check
+					keys = JSON.parse(data).results
+					Promise.map(keys, function(key) {
+						var key_id = key.id
+						var key_slug = key.slug
+						get_enrichments = {
+							url:    train_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",
+						   	method:  "GET",
+						   	headers: header_train
+						}
+						return rp.get(get_enrichments)
+						.then( function (data){
+							var enrichments = JSON.parse(data).results.enrichments
+							Promise.map(enrichments, function(enrichment) {
+								console.log(search_str + " " + enrichment.value)
+								if(enrichment.value.includes(search_str)){
+									ent_str_to_usr += '<br>\t' + key_slug + ': ' + enrichment.value
+									console.log('BOOM')
+								}
+							}, {concurrency: 1})
+						})
+						.catch(function(err) {
+							console.log("GET" + get_enrichments.url)
+							console.log(err.message)
+						})
+					}, {concurrency: 1})
+					.then( function(){
+						if(ent_str_to_usr > ent_str_to_usr_check){
+							res.write(`${ent_str_to_usr}</pre>`)
+						}
+					})
+				})
+				
+				.catch(function(err) {
+					console.log("GET" + get_entity_keys.url)
+					console.log(err.message)
+				})
+			}
+		}, {concurrency: 1})
+		
+	})
+	.catch(function(err) {
+		console.log(err.message)
+	})
+
 	rp.get(get_skills)
 	.then( function(data) {
 // 
@@ -426,80 +489,6 @@ app.post('/where_used', function (req, res) {
 			if (err_skills > err_skills_check) {
 				res.write(err_skills + '</p>')
 			}
-		})
-	}).then( function() {
-		rp.get(get_entities)
-		.then( function(data) {
-			entities = JSON.parse(data).results
-
-			Promise.map(entities, function(entity) {
-				var entity_id = entity.id
-				var entity_slug = entity.slug
-
-				
-
-				if(entity.custom) {
-
-					get_entity_keys = {
-						url:    train_url + "/dataset/entities/" + entity_slug + "/keys",
-					   	method:  "GET",
-					   	headers: header_train
-					}
-
-					var ent_str_to_usr = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/train/entities/' + entity_slug + '/enrichment">' + entity_slug + '</a>' 
-					var ent_str_to_usr_check = ent_str_to_usr
-
-					return rp.get(get_entity_keys)
-					.then( function(data){
-						ent_str_to_usr = ent_str_to_usr_check
-
-						keys = JSON.parse(data).results
-
-						Promise.map(keys, function(key) {
-							var key_id = key.id
-							var key_slug = key.slug
-
-							get_enrichments = {
-								url:    train_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",
-							   	method:  "GET",
-							   	headers: header_train
-							}
-
-							return rp.get(get_enrichments)
-							.then( function (data){
-								var enrichments = JSON.parse(data).results.enrichments
-
-								Promise.map(enrichments, function(enrichment) {
-									console.log(search_str + " " + enrichment.value)
-
-									if(enrichment.value.includes(search_str)){
-										ent_str_to_usr += '<br>\t' + key_slug + ': ' + enrichment.value
-										console.log('BOOM')
-									}
-								}, {concurrency: 1})
-							})
-							.catch(function(err) {
-								console.log("GET" + get_enrichments.url)
-								console.log(err.message)
-							})
-						}, {concurrency: 1})
-						.then( function(){
-							if(ent_str_to_usr > ent_str_to_usr_check){
-								res.write(`${ent_str_to_usr}</pre>`)
-							}
-						})
-					})
-					
-					.catch(function(err) {
-						console.log("GET" + get_entity_keys.url)
-						console.log(err.message)
-					})
-				}
-			}, {concurrency: 1})
-			
-		})
-		.catch(function(err) {
-			console.log(err.message)
 		})
 	})
 	.catch( function(err) {

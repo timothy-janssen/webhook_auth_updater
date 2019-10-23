@@ -454,8 +454,8 @@ app.post('/where_used', function (req, res) {
 						keys = JSON.parse(data).results
 
 						Promise.map(keys, function(key) {
-							var key_id = key.id
-							var key_slug = key.slug
+							key_id = key.id
+							key_slug = key.slug
 
 							get_enrichments = {
 								url:    train_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",

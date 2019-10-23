@@ -298,8 +298,10 @@ app.post('/where_used', function (req, res) {
 
 	res.write(`<p>Searching for ${search_str} in version ${version_id} of <a href="https://cai.tools.sap/${user_id}/${bot_id}">this bot</a><p><br>`)
 
-	build_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id
-	train_url = "https://api.cai.tools.sap/train/v2/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id
+	var usr_bot_vrn = "users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id
+
+	const build_url = "https://api.cai.tools.sap/build/v1/" + usr_bot_vrn
+	const train_url = "https://api.cai.tools.sap/train/v2/" + usr_bot_vrn
 
 	var err_skills = '<p>There was an error with retrieving data for the following skills:'
 	err_skills_check = err_skills
@@ -313,11 +315,7 @@ app.post('/where_used', function (req, res) {
 	}
 
 	header_train = {
-	   	"Authorization": "Bearer ec4b01e0a3969d1e3ef2bbeffa34540e"//,
-	   	// "Accept": "application/json",
-		// "Cache-Control": "no-cache",
-		// "Connection": "keep-alive",
-		// "Content-Type": "application/json"
+	   	"Authorization": "Bearer ec4b01e0a3969d1e3ef2bbeffa34540e"
 	}
 
 	get_skills = {
@@ -332,88 +330,98 @@ app.post('/where_used', function (req, res) {
 	   	headers: header_train
 	}
 
-
-	rp.get(get_entities)
-	.then( function(data) {
-		entities = JSON.parse(data).results
-		Promise.map(entities, function(entity) {
-			var entity_id = entity.id
-			var entity_slug = entity.slug
-			
-			if(entity.custom) {
-				get_entity_keys = {
-					url:    train_url + "/dataset/entities/" + entity_slug + "/keys",
-				   	method:  "GET",
-				   	headers: header_train
-				}
-				var ent_str_to_usr = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/train/entities/' + entity_slug + '/enrichment">' + entity_slug + '</a>' 
-				var ent_str_to_usr_check = ent_str_to_usr
-				return rp.get(get_entity_keys)
-				.then( function(data){
-					ent_str_to_usr = ent_str_to_usr_check
-					keys = JSON.parse(data).results
-					Promise.map(keys, function(key) {
-						var key_id = key.id
-						var key_slug = key.slug
-						get_enrichments = {
-							url:    train_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",
-						   	method:  "GET",
-						   	headers: header_train
-						}
-						return rp.get(get_enrichments)
-						.then( function (data){
-							var enrichments = JSON.parse(data).results.enrichments
-							Promise.map(enrichments, function(enrichment) {
-								console.log(search_str + " " + enrichment.value)
-								if(enrichment.value.includes(search_str)){
-									ent_str_to_usr += '<br>\t' + key_slug + ': ' + enrichment.value
-									console.log('BOOM')
-								}
-							}, {concurrency: 1})
-						})
-						.catch(function(err) {
-							console.log("GET" + get_enrichments.url)
-							console.log(err.message)
-						})
-					}, {concurrency: 1})
-					.then( function(){
-						if(ent_str_to_usr > ent_str_to_usr_check){
-							res.write(`${ent_str_to_usr}</pre>`)
-						}
-					})
-				})
+/*
+	var wh_entities = new Promise((resolve, reject) => { 
+		return rp.get(get_entities)
+		.then( function(data) {
+			entities = JSON.parse(data).results
+			Promise.map(entities, function(entity) {
+				var entity_id = entity.id
+				var entity_slug = entity.slug
 				
-				.catch(function(err) {
-					console.log("GET" + get_entity_keys.url)
-					console.log(err.message)
-				})
-			}
-		}, {concurrency: 1})
-		
-	})
-	.catch(function(err) {
-		console.log(err.message)
-	})
+				if(entity.custom) {
+					get_entity_keys = {
+						url:    train_url + "/dataset/entities/" + entity_slug + "/keys",
+					   	method:  "GET",
+					   	headers: header_train
+					}
+					var ent_str_to_usr = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/train/entities/' + entity_slug + '/enrichment">' + entity_slug + '</a>' 
+					var ent_str_to_usr_check = ent_str_to_usr
+					return rp.get(get_entity_keys)
+					.then( function(data){
+						ent_str_to_usr = ent_str_to_usr_check
+						keys = JSON.parse(data).results
+						Promise.map(keys, function(key) {
+							var key_id = key.id
+							var key_slug = key.slug
+							get_enrichments = {
+								url:    train_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",
+							   	method:  "GET",
+							   	headers: header_train
+							}
+							return rp.get(get_enrichments)
+							.then( function (data){
+								var enrichments = JSON.parse(data).results.enrichments
+								Promise.map(enrichments, function(enrichment) {
+									console.log(search_str + " " + enrichment.value)
+									if(enrichment.value.includes(search_str)){
+										ent_str_to_usr += '<br>\t' + key_slug + ': ' + enrichment.value
+										console.log('BOOM')
+									}
+								}, {concurrency: 1})
+							})
+							.catch(function(err) {
+								console.log("GET" + get_enrichments.url)
+								console.log(err.message)
+							})
+						}, {concurrency: 1})
+						.then( function(){
+							if(ent_str_to_usr > ent_str_to_usr_check){
+								res.write(`${ent_str_to_usr}</pre>`)
+							}
+						})
+					})
+					
+					.catch(function(err) {
+						console.log("GET" + get_entity_keys.url)
+						console.log(err.message)
+					})
+				}
+			}, {concurrency: 1})
+			
+		})
+		.catch(function(err) {
+			console.log(err.message)
+		})
+	}); 
 
-	.then(function(){
+
+
+	
+
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	.then(function(){*/
 	rp.get(get_skills)
 	.then( function(data) {
-// 
+
 		skills = JSON.parse(data).results
-// 
+
 		Promise.map(skills, function(skill) {
 			var skill_name = skill.slug
 			var skill_str_to_user = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/skills/' + skill_name + '">' + skill_name + '</a>'
 			var skill_str_to_user_check = skill_str_to_user
-// 
+
 			console.log("Skill: " + skill_name)
-// 
+
 			get_skill_triggers = {
 				url:    build_url + "/builder/skills/" + skill_name + "/trigger",
 			   	method:  "GET",
 			   	headers: header
 			}
-// 
+
 			console.log("TRIGGERS: " + skill_name)
 			return rp.get(get_skill_triggers)
 			.then( function(data){				
@@ -421,38 +429,38 @@ app.post('/where_used', function (req, res) {
 					data = JSON.parse(data)
 					triggers = data.results.children
 					num = get_count(triggers, search_str)
-// 
+
 					if ( num > 0 ) {
 						skill_str_to_user += '<br>\tTriggers: ' + num
 						// res.write(`${num} occurances of ${search_str} in ${skill_name} trigger\n`)
 					}
 				}
-// 
+
 				get_skill_tasks = {
 					url:    build_url + "/builder/skills/" + skill_name + "/task",
 				   	method:  "GET",
 				   	headers: header
 				}
-// 
+
 				console.log("TASKS: " + skill_name)
 				return rp.get(get_skill_tasks)
 				.then( function(data){
 					if(data) {
 						tasks = JSON.parse(data).results.children
 						num = get_count(tasks, search_str)
-	// 
+	 
 						if ( num > 0 ) {
 							skill_str_to_user += '<br>\tRequirements: ' + num
 							// res.write(`${num} occurances of ${search_str} in ${skill_name} requirements\n`)
 						}
 					}
-	// 
+	
 					get_skill_actions = {
 						url:    build_url + "/builder/skills/" + skill_name + "/results",
 				   		method:  "GET",
 				   		headers: header
 					}
-// 
+ 
 					console.log("ACTIONS: " + skill_name)
 					return rp.get(get_skill_actions)
 					.then( function(data){				
@@ -461,7 +469,7 @@ app.post('/where_used', function (req, res) {
 							actions = data.results.children
 							if(skill_name == 'cooler') {num = get_count(actions, search_str, true)}
 							else {num = get_count(actions, search_str)}
-	// 
+	
 							if ( num > 0 ) {
 								skill_str_to_user += '<br>\tActions: ' + num
 								// res.write(`${num} occurances of ${search_str} in ${skill_name} actions\n`)
@@ -501,7 +509,7 @@ app.post('/where_used', function (req, res) {
     	res.write(`<p>If the link doesn't work, then the Owner/Bot ID's are wrong ;)</p>`)
     	res.end()
 	})
-})
+//})
 });
 
 function get_count(obj, str, debug) {

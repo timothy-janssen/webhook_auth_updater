@@ -474,6 +474,7 @@ app.post('/where_used', function (req, res) {
 
 									if(enrichment.value.includes(search_str)){
 										ent_str_to_usr += '<br>\t' + key_slug + ': ' + enrichment.value
+										console.log('BOOM')
 									}
 								}, {concurrency: 1})
 							})

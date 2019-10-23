@@ -469,7 +469,7 @@ app.post('/where_used', function (req, res) {
 							return rp.get(get_enrichments)
 							.then( function (data){
 								console.log(data)
-								enrichments = JSON.parse(data).results.enrichments
+								var enrichments = JSON.parse(data).results.enrichments
 
 								Promise.map(enrichments, function(enrichment) {
 									if(enrichment.value.includes(search_str)){

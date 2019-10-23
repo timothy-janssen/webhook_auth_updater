@@ -447,6 +447,8 @@ app.post('/where_used', function (req, res) {
 					   	headers: header_train
 					}
 
+					console.log("GET" + get_entity_keys.url)
+
 					return rp.get(get_entity_keys)
 					.then( function(data){
 						keys = JSON.parse(data).results

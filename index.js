@@ -298,7 +298,7 @@ app.post('/where_used', function (req, res) {
 
 	res.write(`<p>Searching for ${search_str} in version ${version_id} of <a href="https://cai.tools.sap/${user_id}/${bot_id}">this bot</a><p><br>`)
 
-	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id + "/builder"
+	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id
 
 	var err_skills = '<p>There was an error with retrieving data for the following skills:'
 	err_skills_check = err_skills
@@ -312,7 +312,13 @@ app.post('/where_used', function (req, res) {
 	}
 
 	get_skills = {
-		url:    base_url + "/skills",
+		url:    base_url + "/builder/skills",
+	   	method:  "GET",
+	   	headers: header
+	}
+
+	get_entities = {
+		url:    base_url + "/dataset/entities",
 	   	method:  "GET",
 	   	headers: header
 	}
@@ -330,7 +336,7 @@ app.post('/where_used', function (req, res) {
 			console.log("Skill: " + skill_name)
 
 			get_skill_triggers = {
-				url:    base_url + "/skills/" + skill_name + "/trigger",
+				url:    base_url + "/builder/skills/" + skill_name + "/trigger",
 			   	method:  "GET",
 			   	headers: header
 			}
@@ -350,7 +356,7 @@ app.post('/where_used', function (req, res) {
 				}
 
 				get_skill_tasks = {
-					url:    base_url + "/skills/" + skill_name + "/task",
+					url:    base_url + "/builder/skills/" + skill_name + "/task",
 				   	method:  "GET",
 				   	headers: header
 				}
@@ -369,7 +375,7 @@ app.post('/where_used', function (req, res) {
 					}
 	
 					get_skill_actions = {
-						url:    base_url + "/skills/" + skill_name + "/results",
+						url:    base_url + "/builder/skills/" + skill_name + "/results",
 				   		method:  "GET",
 				   		headers: header
 					}
@@ -406,12 +412,75 @@ app.post('/where_used', function (req, res) {
 				console.log(err.message)
 				err_skills += '<br>' + skill_name + ' (Triggers)'
 			})
-		}, {concurrency: 8})
+		}, {concurrency: 5})
 		.then( function() {
 			if (err_skills > err_skills_check) {
 				res.write(err_skills + '</p>')
 			}
-			res.end()
+		})
+	}).then( function() {
+		rp.get(get_entities)
+		.then( function(data) {
+			entities = JSON.parse(data).results
+
+			Promise.map(entities, function(entity) {
+				entity_id = entity.id
+				entity_slug = entity.slug
+
+				var ent_str_to_usr = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/train/entities/' + entity_slug + '/enrichment">' + entity_slug + '</a>' 
+				var ent_str_to_usr_check = ent_str_to_usr
+
+				if(entity.custom) {
+
+					get_entity_keys = {
+						url:    base_url + "/dataset/entities/" + entity_slug + "/keys",
+					   	method:  "GET",
+					   	headers: header
+					}
+
+					return rp.get(get_entity_keys)
+					.then( function(data){
+						keys = JSON.parse(data).results
+
+						Promise.map(keys, function(key) {
+							key_id = key.id
+							key_slug = key.slug
+
+							get_enrichments = {
+								url:    base_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",
+							   	method:  "GET",
+							   	headers: header
+							}
+
+							return rp.get(get_enrichments)
+							.then( function (data){
+								enrichments = JSON.parse(data).results.enrichments
+
+								Promise.map(enrichments, function(enrichment) {
+									if(enrichment.value.includes(search_str)){
+										ent_str_to_usr += '<br>\t' + key_slug + ': ' + enrichment.value
+									}
+								}, {concurrency: 1})
+							})
+							.catch(function() {
+								console.log(err.message)
+							})
+						}, {concurrency: 5})
+					})
+					.catch(function() {
+						console.log(err.message)
+					})
+				}
+			}, {concurrency: 5})
+			.then( function(){
+				if(ent_str_to_usr > ent_str_to_usr_check){
+					res.write(`${ent_str_to_usr}</pre>`)
+				}	
+				res.end()
+			})
+		})
+		.catch(function() {
+			console.log(err.message)
 		})
 	})
 	.catch( function(err) {

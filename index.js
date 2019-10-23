@@ -477,7 +477,7 @@ app.post('/where_used', function (req, res) {
 								console.log("GET" + get_enrichments.url)
 								console.log(err.message)
 							})
-						}, {concurrency: 5})
+						}, {concurrency: 1})
 					})
 					.then( function(){
 						if(ent_str_to_usr > ent_str_to_usr_check){
@@ -490,7 +490,7 @@ app.post('/where_used', function (req, res) {
 						console.log(err.message)
 					})
 				}
-			}, {concurrency: 5})
+			}, {concurrency: 1})
 			
 		})
 		.catch(function(err) {

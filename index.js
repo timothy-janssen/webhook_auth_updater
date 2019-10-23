@@ -395,6 +395,7 @@ app.post('/where_used', function (req, res) {
 		console.log(err.message)
 	})
 
+	.then(function(){
 	rp.get(get_skills)
 	.then( function(data) {
 // 
@@ -500,6 +501,7 @@ app.post('/where_used', function (req, res) {
     	res.write(`<p>If the link doesn't work, then the Owner/Bot ID's are wrong ;)</p>`)
     	res.end()
 	})
+})
 });
 
 function get_count(obj, str, debug) {

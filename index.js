@@ -462,12 +462,12 @@ app.post('/where_used', function (req, res) {
 									}
 								}, {concurrency: 1})
 							})
-							.catch(function() {
+							.catch(function(err) {
 								console.log(err.message)
 							})
 						}, {concurrency: 5})
 					})
-					.catch(function() {
+					.catch(function(err) {
 						console.log(err.message)
 					})
 				}
@@ -479,7 +479,7 @@ app.post('/where_used', function (req, res) {
 				res.end()
 			})
 		})
-		.catch(function() {
+		.catch(function(err) {
 			console.log(err.message)
 		})
 /*	})

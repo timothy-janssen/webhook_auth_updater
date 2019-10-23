@@ -447,7 +447,7 @@ app.post('/where_used', function (req, res) {
 					   	headers: header_train
 					}
 
-					console.log("GET" + get_entity_keys.url)
+					
 
 					return rp.get(get_entity_keys)
 					.then( function(data){
@@ -485,6 +485,7 @@ app.post('/where_used', function (req, res) {
 						res.end()
 					})
 					.catch(function(err) {
+						console.log("GET" + get_entity_keys.url)
 						console.log(err.message)
 					})
 				}

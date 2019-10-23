@@ -298,7 +298,8 @@ app.post('/where_used', function (req, res) {
 
 	res.write(`<p>Searching for ${search_str} in version ${version_id} of <a href="https://cai.tools.sap/${user_id}/${bot_id}">this bot</a><p><br>`)
 
-	base_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id
+	build_url = "https://api.cai.tools.sap/build/v1/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id
+	train_url = "https://api.cai.tools.sap/train/v2/users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id
 
 	var err_skills = '<p>There was an error with retrieving data for the following skills:'
 	err_skills_check = err_skills
@@ -312,13 +313,13 @@ app.post('/where_used', function (req, res) {
 	}
 
 	get_skills = {
-		url:    base_url + "/builder/skills",
+		url:    build_url + "/builder/skills",
 	   	method:  "GET",
 	   	headers: header
 	}
 
 	get_entities = {
-		url:    base_url + "/dataset/entities",
+		url:    train_url + "/dataset/entities",
 	   	method:  "GET",
 	   	headers: header
 	}
@@ -336,7 +337,7 @@ app.post('/where_used', function (req, res) {
 	// 		console.log("Skill: " + skill_name)
 
 	// 		get_skill_triggers = {
-	// 			url:    base_url + "/builder/skills/" + skill_name + "/trigger",
+	// 			url:    build_url + "/builder/skills/" + skill_name + "/trigger",
 	// 		   	method:  "GET",
 	// 		   	headers: header
 	// 		}
@@ -356,7 +357,7 @@ app.post('/where_used', function (req, res) {
 	// 			}
 
 	// 			get_skill_tasks = {
-	// 				url:    base_url + "/builder/skills/" + skill_name + "/task",
+	// 				url:    build_url + "/builder/skills/" + skill_name + "/task",
 	// 			   	method:  "GET",
 	// 			   	headers: header
 	// 			}
@@ -375,7 +376,7 @@ app.post('/where_used', function (req, res) {
 	// 				}
 	
 	// 				get_skill_actions = {
-	// 					url:    base_url + "/builder/skills/" + skill_name + "/results",
+	// 					url:    build_url + "/builder/skills/" + skill_name + "/results",
 	// 			   		method:  "GET",
 	// 			   		headers: header
 	// 				}
@@ -433,7 +434,7 @@ app.post('/where_used', function (req, res) {
 				if(entity.custom) {
 
 					get_entity_keys = {
-						url:    base_url + "/dataset/entities/" + entity_slug + "/keys",
+						url:    train_url + "/dataset/entities/" + entity_slug + "/keys",
 					   	method:  "GET",
 					   	headers: header
 					}
@@ -447,7 +448,7 @@ app.post('/where_used', function (req, res) {
 							key_slug = key.slug
 
 							get_enrichments = {
-								url:    base_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",
+								url:    train_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",
 							   	method:  "GET",
 							   	headers: header
 							}

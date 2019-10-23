@@ -436,8 +436,7 @@ app.post('/where_used', function (req, res) {
 				var entity_id = entity.id
 				var entity_slug = entity.slug
 
-				var ent_str_to_usr = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/train/entities/' + entity_slug + '/enrichment">' + entity_slug + '</a>' 
-				var ent_str_to_usr_check = ent_str_to_usr
+				
 
 				if(entity.custom) {
 
@@ -447,10 +446,13 @@ app.post('/where_used', function (req, res) {
 					   	headers: header_train
 					}
 
-					
+					var ent_str_to_usr = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/train/entities/' + entity_slug + '/enrichment">' + entity_slug + '</a>' 
+					var ent_str_to_usr_check = ent_str_to_usr
 
 					return rp.get(get_entity_keys)
 					.then( function(data){
+						ent_str_to_usr = ent_str_to_usr_check
+
 						keys = JSON.parse(data).results
 
 						Promise.map(keys, function(key) {

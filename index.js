@@ -662,4 +662,135 @@ function check_obj(obj, str, debug){
 }
 
 
+
+// GET PROMISE.ALL
+app.post('/where', function (req, res) {
+
+	var user_id =  "successfactors-sap"
+	var bot_id =  "nate-and-tims-concierge-bot"
+	var version_id = "concierge"
+	var dev_token = "61276f98eb30521db18b6972c0d7b266"
+
+	var search_str = "e"
+
+	res.write(`<p>Searching for ${search_str} in version ${version_id} of <a href="https://cai.tools.sap/${user_id}/${bot_id}">this bot</a><p><br>`)
+
+	var usr_bot_vrn = "users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id
+
+	const build_url = "https://api.cai.tools.sap/build/v1/" + usr_bot_vrn
+	const train_url = "https://api.cai.tools.sap/train/v2/" + usr_bot_vrn
+
+
+
+
+
+
+
+
+
+	var err_skills = '<p>There was an error with retrieving data for the following skills:'
+	err_skills_check = err_skills
+
+	build_header = {
+	   	"Authorization": "Token " + dev_token,
+	   	"Accept": "application/json",
+		"Cache-Control": "no-cache",
+		"Connection": "keep-alive",
+		"Content-Type": "application/json"
+	}
+
+	get_skills = {
+		url:    build_url + "/builder/skills",
+	   	method:  "GET",
+	   	headers: build_header
+	}
+
+
+
+
+	train_header = {
+	   	"Authorization": "Token " + dev_token
+	}
+
+	get_entities = {
+		url:    train_url + "/dataset/entities",
+	   	method:  "GET",
+	   	headers: train_header
+	}
+	
+	return rp.get(get_entities)
+		.then( function(data) {
+			entities = JSON.parse(data).results
+			Promise.map(entities, function(entity) {
+				var entity_id = entity.id
+				var entity_slug = entity.slug
+				
+				if(entity.custom) {
+					get_entity_keys = {
+						url:    train_url + "/dataset/entities/" + entity_slug + "/keys",
+					   	method:  "GET",
+					   	headers: header_train
+					}
+					var ent_str_to_usr = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/train/entities/' + entity_slug + '/enrichment">' + entity_slug + '</a>' 
+					var ent_str_to_usr_check = ent_str_to_usr
+					return rp.get(get_entity_keys)
+					.then( function(data){
+						ent_str_to_usr = ent_str_to_usr_check
+						keys = JSON.parse(data).results
+						Promise.map(keys, function(key) {
+							var key_id = key.id
+							var key_slug = key.slug
+							get_enrichments = {
+								url:    train_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",
+							   	method:  "GET",
+							   	headers: header_train
+							}
+							return rp.get(get_enrichments)
+							.then( function (data){
+								var enrichments = JSON.parse(data).results.enrichments
+								Promise.map(enrichments, function(enrichment) {
+									console.log(search_str + " " + enrichment.value)
+									if(enrichment.value.includes(search_str)){
+										ent_str_to_usr += '<br>\t' + key_slug + ': ' + enrichment.value
+										console.log('BOOM')
+									}
+								}, {concurrency: 1})
+							})
+							.catch(function(err) {
+								console.log("GET" + get_enrichments.url)
+								console.log(err.message)
+							})
+						}, {concurrency: 1})
+						.then( function(){
+							if(ent_str_to_usr > ent_str_to_usr_check){
+								res.write(`${ent_str_to_usr}</pre>`)
+							}
+						})
+					})
+					
+					.catch(function(err) {
+						console.log("GET" + get_entity_keys.url)
+						console.log(err.message)
+					})
+				}
+			}, {concurrency: 1})
+			
+		})
+		.catch(function(err) {
+			console.log(err.message)
+		})
+
+var promise1 = Promise.resolve(3);
+var promise2 = 42;
+var promise3 = new Promise(function(resolve, reject) {
+  setTimeout(resolve, 100, 'foo');
+});
+
+Promise.all([promise1, promise2, promise3]).then(function(values) {
+  console.log(values);
+});
+
+})
+
+
 app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`));

@@ -729,7 +729,7 @@ app.post('/where', function (req, res) {
 					get_entity_keys = {
 						url:    train_url + "/dataset/entities/" + entity_slug + "/keys",
 					   	method:  "GET",
-					   	headers: header_train
+					   	headers: train_header
 					}
 					var ent_str_to_usr = '<pre><a href="https://cai.tools.sap/' + user_id + '/' + bot_id + '/train/entities/' + entity_slug + '/enrichment">' + entity_slug + '</a>' 
 					var ent_str_to_usr_check = ent_str_to_usr
@@ -743,7 +743,7 @@ app.post('/where', function (req, res) {
 							get_enrichments = {
 								url:    train_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",
 							   	method:  "GET",
-							   	headers: header_train
+							   	headers: train_header
 							}
 							return rp.get(get_enrichments)
 							.then( function (data){

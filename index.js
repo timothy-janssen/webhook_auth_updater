@@ -680,9 +680,24 @@ app.post('/where', function (req, res) {
 	const build_url = "https://api.cai.tools.sap/build/v1/" + usr_bot_vrn
 	const train_url = "https://api.cai.tools.sap/train/v2/" + usr_bot_vrn
 
+	header = {
+	   	"Authorization": "Bearer ec4b01e0a3969d1e3ef2bbeffa34540e"
+	}
+
+	var call_context = {
+		"user_id": user_id,
+		"bot_id": bot_id,
+		"version_id": version_id,
+		"dev_token": dev_token,
+		"search_str": search_str,
+		"build_url": build_url,
+		"train_url": train_url,
+		"header": header
+	}
 
 
-	var search_entities_promise = get_entities().then( data => { return get_entity_enrich_keys(data) })
+
+	var search_entities_promise = get_entities(call_context).then( data => { return get_entity_enrich_keys(data, call_context) })
 	
 
 
@@ -692,22 +707,18 @@ app.post('/where', function (req, res) {
 
 })
 
-header = {
-   	"Authorization": "Bearer ec4b01e0a3969d1e3ef2bbeffa34540e"
-}
-
-function get_entities () {
+function get_entities (call_context) {
 
 	get_entities = {
-		url:    train_url + "/dataset/entities",
+		url:    call_context.train_url + "/dataset/entities",
 	   	method:  "GET",
-	   	headers: header
+	   	headers: call_context.header
 	}
 
 	return rp.get(get_entities)	
 }
 
-function get_entity_enrich_keys (data) {
+function get_entity_enrich_keys (data, call_context) {
 
 	entities = JSON.parse(data).results
 
@@ -717,16 +728,17 @@ function get_entity_enrich_keys (data) {
 		
 		if(entity.custom) {
 			get_enrich_keys = {
-				url:    train_url + "/dataset/entities/" + entity_slug + "/keys",
+				url:    call_context.train_url + "/dataset/entities/" + entity_slug + "/keys",
 			   	method:  "GET",
-			   	headers: header
+			   	headers: call_context.header
 			}
-			return rp.get(get_enrich_keys).then( data => { return get_entity_enrich_values(data, entity_slug) })
+
+			return rp.get(get_enrich_keys).then( data => { return get_entity_enrich_values(data, call_context, entity_slug) })
 		}
 	})
 }
 
-function get_entity_enrich_values (data, entity_slug) {
+function get_entity_enrich_values (data, call_context, entity_slug) {
 	keys = JSON.parse(data).results
 
 	Promise.map(keys, function(key) {
@@ -734,9 +746,9 @@ function get_entity_enrich_values (data, entity_slug) {
 		var key_slug = key.slug
 
 		get_enrich_values = {
-			url:    train_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",
+			url:    call_context.train_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",
 		   	method:  "GET",
-		   	headers: header
+		   	headers: call_context.header
 		}
 
 		return rp.get(get_enrich_values).then( data => { return find_search_str_in_value(data) })

@@ -249,7 +249,7 @@ app.get('/where_used', function (req, res) {
         <!doctype html>
         <html>
         <body>
-            <form action="/where_used" method="post">
+            <form action="/where" method="post">
             	Bot Data<br>
                 Bot Owner ID: <input type="text" name="user_id" /><br>
                 Bot ID: <input type="text" name="bot_id" /><br>

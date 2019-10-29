@@ -663,6 +663,8 @@ function check_obj(obj, str, debug){
 
 
 
+var search_str = "e"
+
 // GET PROMISE.ALL
 app.post('/where', function (req, res) {
 
@@ -671,7 +673,7 @@ app.post('/where', function (req, res) {
 	var version_id = "concierge"
 	var dev_token = "61276f98eb30521db18b6972c0d7b266"
 
-	var search_str = "e"
+
 
 	res.write(`<p>Searching for ${search_str} in version ${version_id} of <a href="https://cai.tools.sap/${user_id}/${bot_id}">this bot</a><p><br>`)
 

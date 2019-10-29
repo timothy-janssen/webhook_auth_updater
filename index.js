@@ -5,6 +5,8 @@ const bp 		= require('body-parser')
 const config  	= require('./config');
 const stringify = require('json-stringify-safe');
 
+const es 		= require('./entity_search');
+
 var app = express();
 app.use(bp.json());  
 app.use(bp.urlencoded());
@@ -663,109 +665,17 @@ function check_obj(obj, str, debug){
 
 
 
-var search_str = "e"
-
-// GET PROMISE.ALL
 app.post('/where', function (req, res) {
 
-	var user_id =  "successfactors-sap"
-	var bot_id =  "nate-and-tims-concierge-bot"
-	var version_id = "concierge"
-	var dev_token = "61276f98eb30521db18b6972c0d7b266"
 
+	var entity_search = es.entity_search(req, res)
 
-
-	res.write(`<p>Searching for ${search_str} in version ${version_id} of <a href="https://cai.tools.sap/${user_id}/${bot_id}">this bot</a><p><br>`)
-
-	var usr_bot_vrn = "users/" + user_id + "/bots/" + bot_id + "/versions/" + version_id
-
-	const build_url = "https://api.cai.tools.sap/build/v1/" + usr_bot_vrn
-	const train_url = "https://api.cai.tools.sap/train/v2/" + usr_bot_vrn
-
-	header = {
-	   	"Authorization": "Bearer ec4b01e0a3969d1e3ef2bbeffa34540e"
-	}
-
-	var call_context = {
-		"user_id": user_id,
-		"bot_id": bot_id,
-		"version_id": version_id,
-		"dev_token": dev_token,
-		"search_str": search_str,
-		"build_url": build_url,
-		"train_url": train_url,
-		"header": header
-	}
-
-
-
-	var search_entities_promise = get_entities(call_context).then( data => { return get_entity_enrich_keys(data, call_context) })
-	
-
+	var search_entities_promise = entity_search.get_entities().then( data => { return entity_search.get_entity_enrich_keys(data) })
 
 	Promise.all([search_entities_promise]).then(function(values) {
 	  console.log(values);
 	});
 
 })
-
-function get_entities (call_context) {
-
-	get_entities = {
-		url:    call_context.train_url + "/dataset/entities",
-	   	method:  "GET",
-	   	headers: call_context.header
-	}
-
-	return rp.get(get_entities)	
-}
-
-function get_entity_enrich_keys (data, call_context) {
-
-	entities = JSON.parse(data).results
-
-	return Promise.map(entities, function(entity) {
-		var entity_id = entity.id
-		var entity_slug = entity.slug
-		
-		if(entity.custom) {
-			get_enrich_keys = {
-				url:    call_context.train_url + "/dataset/entities/" + entity_slug + "/keys",
-			   	method:  "GET",
-			   	headers: call_context.header
-			}
-
-			return rp.get(get_enrich_keys).then( data => { return get_entity_enrich_values(data, call_context, entity_slug) })
-		}
-	})
-}
-
-function get_entity_enrich_values (data, call_context, entity_slug) {
-	keys = JSON.parse(data).results
-
-	Promise.map(keys, function(key) {
-		var key_id = key.id
-		var key_slug = key.slug
-
-		get_enrich_values = {
-			url:    call_context.train_url + "/dataset/entities/" + entity_slug + "/keys/" + key_id + "/enrichments",
-		   	method:  "GET",
-		   	headers: call_context.header
-		}
-
-		return rp.get(get_enrich_values).then( data => { return find_search_str_in_value(data) })
-	})
-}
-
-function find_search_str_in_value (data) {
-	var enrichments = JSON.parse(data).results.enrichments
-	
-	return Promise.map(enrichments, function(enrichment) {
-		console.log(search_str + " " + enrichment.value)
-		if(enrichment.value.includes(search_str)){
-			ent_str_to_usr += '<br>\t' + key_slug + ': ' + enrichment.value
-		}
-	}, {concurrency: 1})
-}
 
 app.listen(config.PORT, () => console.log(`App started on port ${config.PORT}`));

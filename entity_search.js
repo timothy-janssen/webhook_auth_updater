@@ -1,4 +1,4 @@
-var entity_search = function(req, res) {
+export var entity_search = function(req, res) {
 
 	var obj = {}
 

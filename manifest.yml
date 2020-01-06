@@ -1,0 +1,6 @@
+---
+applications:
+- name: webhook_auth_updater 
+  path: .
+  command: node index.js
+  buildpack: nodejs_buildpack

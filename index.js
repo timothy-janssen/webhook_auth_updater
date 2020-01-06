@@ -115,7 +115,7 @@ function add_template_to_webhooks(res) {
 	.then( function(data) {
 		condition_data = JSON.parse(data)
 		
-		console.log(JSON.stringify(data))
+		console.log(JSON.stringify(condition_data.results))
 
 
 		condition_data.results.forEach( function(condition) {

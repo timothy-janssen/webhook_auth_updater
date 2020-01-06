@@ -114,6 +114,9 @@ function add_template_to_webhooks(res) {
 	rp.get(get_conditions)
 	.then( function(data) {
 		condition_data = JSON.parse(data)
+		
+		console.log(JSON.stringify(data))
+
 
 		condition_data.results.forEach( function(condition) {
 			condition_id = condition.id

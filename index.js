@@ -148,7 +148,7 @@ function add_template_to_webhooks(res) {
 	}).catch(function (err) {
 		res.write(`Could not get the conditions from the bot ${user_id}/${bot_id}/${version_id}`)
 		res.end()
-		console.log(get_conditions.toString())
+		console.log(JSON.stringify(get_conditions))
 		console.log('Could not get the conditions from the bot '+ user_id + '/' + bot_id + '/' + version_id)
 		console.log(err.message)
 	})

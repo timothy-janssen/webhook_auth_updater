@@ -114,7 +114,7 @@ function add_template_to_webhooks(res) {
 	rp.get(get_conditions)
 	.then( function(data) {
 		condition_data = JSON.parse(data)
-		
+
 		console.log(JSON.stringify(condition_data.results))
 
 
@@ -124,7 +124,7 @@ function add_template_to_webhooks(res) {
 			condition.actions.forEach( function(action) {
 				if (action.type == "http"){
 					action_id = action.id
-					webhook_id = action.value.id
+					webhook_id = action.id
 
 					wh_cred_req = {
 						url: base_url + "/conditions/" + condition_id + "/actions/" + action_id + "/webhooks/" + webhook_id,
